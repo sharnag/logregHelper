@@ -2,17 +2,17 @@
 % Please edit documentation in R/plotPredictors.R
 \name{plotPredictors}
 \alias{plotPredictors}
-\title{Function used to return plots of the logit of the response vs numerical predictors}
+\title{Plot Logit against Numerical Predictors}
 \usage{
-plotPredictors(fittedModel, interactive = FALSE)
+plotPredictors(fittedModel, interactive = F)
 }
 \arguments{
-\item{fittedModel;}{a logistic regression model fitted using the glm function}
+\item{fittedModel}{A fitted \code{glm} model object of family \code{binomial}.}
 
-\item{interactive;}{a flag used to indicate whether and interactive plot is returned (TRUE) or standard plots (FALSE)}
+\item{interactive}{\code{logical}. If \code{TRUE} then return an interactive plot; if \code{FALSE}, return ggplot objects (default).}
 }
 \description{
-Used to check assumptions of logistic regression are not violated
+S3 Method on glm object used to return plots of the logit of the response vs numerical predictors. Used during model diagnostics.
 }
 \examples{
 my_plots <- plotPredictors(fittedModel)

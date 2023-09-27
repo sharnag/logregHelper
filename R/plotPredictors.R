@@ -1,23 +1,31 @@
-#' Function used to return plots of the logit of the response vs numerical predictors
+#' Plot Logit against Numerical Predictors
 #'
-#' Used to check assumptions of logistic regression are not violated
-#' @param fittedModel; a logistic regression model fitted using the glm function
-#' @param interactive; a flag used to indicate whether and interactive plot is returned (TRUE) or standard plots (FALSE)
+#' S3 Method on glm object used to return plots of the logit of the response vs numerical predictors. Used during model diagnostics.
+#'
+#' @param fittedModel A fitted `glm` model object of family `binomial`.
+#' @param interactive `logical`. If `TRUE` then return an interactive plot; if `FALSE`, return ggplot objects (default).
 #' @keywords diagnostics, assumptions, linearity, logit, predictor plots
-#' @export
 #' @examples
 #' my_plots <- plotPredictors(fittedModel)
 #' my_plots[[1]]
 #'
-#' @importFrom ggplot2 ggplot aes geom_point labs theme_bw
+#' @importFrom ggplot2 ggplot aes geom_point labs theme_minimal
 #' @importFrom magrittr %>%
 #' @importFrom plotly plot_ly add_markers layout
 #' @importFrom rlang sym
-plotPredictors <- function(fittedModel, interactive=FALSE){
+#'
+#' @export
+plotPredictors <- function(fittedModel, interactive=F) UseMethod('plotPredictors')
+
+#'
+#' @export
+plotPredictors.glm <- function(fittedModel, interactive=F){
   # TODO: customise colours and markers?
 
   # get the numerical terms used in the model
+  # TODO, doesn't work for polynomial terms e.g.  "poly(age, 2)"
   numerical_cols <- colnames(fittedModel$data[,sapply(fittedModel$data,is.numeric)])
+  # TODO if no numerical terms then when should inform the user
   model_terms <- attr(fittedModel$terms, "term.labels")
   numerical_terms <- intersect(numerical_cols, model_terms)
 
@@ -72,7 +80,7 @@ plotPredictors <- function(fittedModel, interactive=FALSE){
       diagnostic_plots[[i]] <- ggplot2::ggplot(data_copy,aes(x=!!var, y=.fitted))+
         geom_point(color='steelblue') +
         labs(y="Logit") +
-        theme_bw()
+        theme_minimal()
 
     }
     # Return list object of ggplots

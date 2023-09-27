@@ -2,15 +2,15 @@
 % Please edit documentation in R/addCols.R
 \name{addCols}
 \alias{addCols}
-\title{Internal Function used copy the model dataframe and add additional columns}
+\title{Add Columns to glm Data}
 \usage{
 addCols(fittedModel)
 }
 \arguments{
-\item{fittedModel}{is a logistic regression model fitted using the glm function}
+\item{fittedModel}{A fitted \code{glm} model object of family \code{binomial}.}
 }
 \description{
-Internal Function used copy the model dataframe and add additional columns
+Internal Function used copy the model dataframe and add additional columns such as the predicted probability and logit of the response. Used by \code{plotPredictors} during model diagnostics
 }
 \examples{
 new_data <- addCols(fittedModel)

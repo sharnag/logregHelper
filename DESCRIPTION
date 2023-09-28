@@ -1,11 +1,12 @@
 Package: logregHelper
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Logistic Regression Helper Functions
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: 
+    person("Sharna", "Granwal", , "granwashar@myvuw.ac.nz", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-1010-3284"))
+Description: This package provides helper functions for logistic regression models fitted using `glm`. 
+    The functions are intended to assist with model diagnostics and model selction.
 Imports:
   ggplot2,
   magrittr,
@@ -14,7 +15,7 @@ Imports:
   rlang,
   stats,
   gt
-License: What license is it under?
+License: -
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

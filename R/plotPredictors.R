@@ -1,4 +1,4 @@
-#' Plot Logit against Numerical Predictors
+#' Plot Logit of Response against Numerical Predictors
 #'
 #' S3 Method on glm object used to return plots of the logit of the response vs numerical predictors. Used during model diagnostics.
 #'

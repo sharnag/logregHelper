@@ -22,16 +22,21 @@ This vignette provides an overview of the logregHelper package and it's key func
 
 The purpose of this package is to simplify and streamline the model selection process by providing insightful summaries, tables and visualisations that allow users to review and compare logistic regression models. This package focuses on two areas: Model Diagnostics and Model Selection.
 
+The package can be installed from Github using:
+```{r, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("sharnag/logregHelper")
+```
 
 There are currently two main functions in the package:
 
 **Model Diagnostics**
 
-- plotPredictors
+- `plotPredictors` plots the logit of the response variable against the numerical predictors
 
 **Model Selection**
 
-- viewCoef
+- `viewCoef` view the estimated coefficients and confidence intervals
 
 In this vignette we will provide examples on how to use them.
 

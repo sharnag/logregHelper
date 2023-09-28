@@ -77,7 +77,7 @@ Currently there is no option to add a smoothing line to the interactive plot.
 
 # Model Selection
 ## viewCoef
-The `viewCoef` function returns the estimated coefficients and confidence intervals from one or more fitted `glm` objects of family "binomial". It maybe useful to see how the estimated coefficients change based on different predictors in a model.
+The `viewCoef` function returns the estimated coefficients and 95% confidence intervals from one or more fitted `glm` objects of family "binomial". It maybe useful to see how the estimated coefficients change based on different predictors in a model.
 
 The default usage returns a `gt` table, however, you can also return the data as a `data.frame` by setting the argument `raw` to T.
 ```{r, warning=FALSE, message=FALSE}

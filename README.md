@@ -8,7 +8,6 @@ The package can be installed from Github using:
 ```{r, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("sharnag/logregHelper")
-library(logregHelper)
 ```
 
 There are currently two main functions in the package:

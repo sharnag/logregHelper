@@ -21,6 +21,11 @@ plotPredictors <- function(fittedModel, smooth=T, interactive=F) UseMethod('plot
 #' @export
 plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
 
+  # Check that fittedModel is a glm object of family binomial
+  if(!("glm" %in% class(fittedModel))){ stop(paste("The model must be a glm object")) }
+  if(!("binomial" %in% fittedModel$family)) { stop(paste("The glm object must have family = binomial"))  }
+
+
   # get the numerical terms used in the model
   # TODO, doesn't work for polynomial terms e.g.  "poly(age, 2)"
   numerical_cols <- colnames(fittedModel$data[,sapply(fittedModel$data,is.numeric)])

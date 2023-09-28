@@ -24,13 +24,25 @@
 #' @export
 viewCoef <- function(fittedModels, exp=F, plot=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand=F){
 
-  # If single glm model passed, add it to a list
+  # Check if fittedModels is a glm object or a list
+  if(!("glm" %in% class(fittedModels)) & !("list" %in% class(fittedModels))){
+    stop(paste("Object must be a glm object or list of glm objects"))
+  }
+
+  # If single glm model passed, check that it has family=binomial, then add it to a list
   if("glm" %in% class(fittedModels)) {
+    if(!("binomial" %in% fittedModels$family)) { stop(paste("The glm object must have family = binomial"))}
     fittedModels <- list(fittedModels)
   }
 
+  # Check each model is
+  for(m in fittedModels) {
+    # Check that fittedModel is a glm object of family binomial
+    if(!("glm" %in% class(m))){ stop(paste("Not all models in list are glm objects")) }
+    if(!("binomial" %in% m$family)) { stop(paste("Not all models in list have family = binomial"))  }
+  }
+
   # Mutiple Models
-  # TODO check this is a list of glms objects - specifically family=binomial
   vals <- NULL
   model_num <- 1
 

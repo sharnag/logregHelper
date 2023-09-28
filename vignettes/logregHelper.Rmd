@@ -1,0 +1,124 @@
+---
+title: "logregHelper"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{logregHelper}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(logregHelper)
+```
+
+This vignette provides an overview of the logregHelper package and it's key functions.
+
+The purpose of this package is to simplify and streamline the model selection process by providing insightful summaries, tables and visualisations that allow users to review and compare logistic regression models. This package focuses on two areas: Model Diagnostics and Model Selection.
+
+
+There are currently two main functions in the package:
+
+**Model Diagnostics**
+
+- plotPredictors
+
+**Model Selection**
+
+- viewCoef
+
+In this vignette we will provide examples on how to use them.
+
+The required inputs for the functions are fitted `glm` models of family "binomial", for example:
+```{r, eval=FALSE}
+fit <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"),)
+```
+
+Currently `glm` models of other family types are not supported. 
+
+A number of pre-fitted models are included for testing purposes in the "models" directory. The models are fitted on the following datasets:
+
+- **mtcars** Motor Trend Car Road Tests data taken from the 1974 Motor Trend US magazine. The logistic regression task is to predict the *am*; whether the transmission is automatic or manual. Source: `datasets` package.
+- **Adult** Adult income data take from the 1994 US Census. The logistic regression task is to predict whether an individual of certain demographics earns above or below $50K/year. Source: http://archive.ics.uci.edu/dataset/2/adult 
+
+The models can be loaded with the following command:
+```{r, eval=FALSE}
+fit <- readRDS(file = "models/<modelname>.rds")
+```
+
+
+A summary of the models are provided in the table below:
+
+|        Model Name     	|                                               Formula                                                	|                                            Description                                            	|
+|:--------------------:	|:----------------------------------------------------------------------------------------------------:	|:-------------------------------------------------------------------------------------------------:	|
+|    mtcarsLRModel1    	|                                          am ~ cyl + hp + wt                                          	|                        Logistic regression model  fitted on mtcars dataset                        	|
+|    mtcarsLRModel2    	|                                             am ~ cyl + hp                                            	|                        Logistic regression model  fitted on mtcars dataset                        	|
+|    mtcarsLRModel3    	|                                             am ~ cyl + wt                                            	|                        Logistic regression model  fitted on mtcars dataset                        	|
+|     adultLRModel     	|      income ~ age + race + marital_status + relationship  + hours_per_week + education_num + sex     	|                         Logistic regression model  fitted on Adult dataset                        	|
+| adultLRModel-catonly 	|                          income ~ race + marital_status + relationship + sex                         	|       Logistic regression model  fitted on Adult dataset using  only categorical predictors       	|
+|      polyLRModel     	| income ~ poly(age, 2) + race + marital_status +  relationship + hours_per_week + education_num + sex 	|              Logistic regression model  fitted on Adult dataset  with polynomial term             	|
+|  interactionLRModel1 	|            age + race + marital_status + relationship  + hours_per_week + education * sex            	|   Logistic regression model  fitted on Adult dataset with interaction between education and sex   	|
+|  interactionLRModel2 	|          age + race + marital_status + relationship  + hours_per_week + education_num * sex          	| Logistic regression model  fitted on Adult dataset with interaction between education_num and sex 	|
+
+
+# Model Diagnostics
+## plotPredictors
+Logistic regression assumes linearity between the logit of the response variable and the continuous predictors. The `plotPredictors` function assists in this inspection by plotting the numerical predictor against the logit of the response. Note: discrete predictors are also included. `plotPredictors` is an S3 method on `glm` type objects. It calls another S3 method `addCols` which returns a `data.frame` with the required columns.
+
+
+To begin we first fit or load a `glm` object of family "binomial":
+```{r}
+fit1 <- readRDS(file = "../models/mtcarsLRModel1.rds")
+```
+
+
+By default, `plotPredictors` returns a list of `ggplot` objects. We can view them as follows:
+```{r, warning=FALSE, fig.width=5, fig.height=4, fig.align='center'}
+myPlots <- plotPredictors(fit1)
+myPlots[[2]]
+```
+
+The smooth regression line can take a long time to run for models with large datasets (1000+ points). In this case we can disable the smoothing line with the `smooth` argument:
+```{r, fig.width=5, fig.height=4, fig.align='center'}
+myPlots <- plotPredictors(fit1, smooth=F)
+myPlots[[2]]
+```
+
+Alternatively, we can return an interactive plot using:
+```{r, fig.width=7, fig.height=4, fig.align='center'}
+plotPredictors(fit1, interactive = T)
+```
+
+Currently there is no option to add a smoothing line to the interactive plot.
+
+# Model Selection
+## viewCoef
+The `viewCoef` function returns the estimated coefficients and confidence intervals from one or more fitted `glm` objects of family "binomial". It maybe useful to see how the estimated coefficients change based on different predictors in a model.
+
+The default usage returns a `gt` table, however, you can also return the data as a `data.frame` by setting the argument `raw` to T.
+```{r, warning=FALSE}
+viewCoef(fit1)
+```
+```{r, warning=FALSE}
+viewCoef(fit1, raw=T)
+```
+
+
+We can compare two or more models by passing the `glm` objects in a list. Other arguments include whether to exponentiate the coefficients (`exp`), change the number of significant figures (`sigfig`), and include the test statistic and p-value (`expand`). We can also change the confidence interval level (`ci`) and return standard confidence intervals based on asymptotic normality instead of the profile likelihood confidence intervals.
+```{r, warning=FALSE}
+fit2 <- readRDS(file = "../models/mtcarsLRModel2.rds")
+viewCoef(list(fit1, fit2), exp=T, sigfig = 4, expand=T, ci=0.9, ci_normal=T)
+```
+
+Finally, we can return a Forest Plot of the estimates and confidence intervals using:
+```{r, warning=FALSE, fig.width=7, fig.height=4, fig.align='center'}
+viewCoef(list(fit1,fit2), plot=T) 
+```
+
+

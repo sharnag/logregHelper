@@ -13,16 +13,24 @@
 #'
 #' @export
 plotCoef <- function(coef_data, exp=F){
-  # Move the x marker depending on whether coefficients are exponentiated or not
-  v<-1
-  if(exp) v <- 0
-  # Create a forest plot with stacked points
+
+  # Show vertical line at 0 for log-odds ratio
+  v<-0
+  xlab <- "Coefficient Estimate"
+  # Show vertical line at 1 for odds ratio
+  if(exp) {
+    v <- 1
+    xlab <- "Exponentiated Coefficient Estimate"
+
+  }
+
+  # Create a forest plot with stacked points for each Model
   ggplot2::ggplot(coef_data, aes(y = Variable, x=Estimate, color=Model)) +
     geom_point(position = position_dodge(width=0.4), size=2) +
     geom_errorbarh(aes(xmin = Lower, xmax = Upper), position = position_dodge(width=0.4),
                    height = 0.2, size=1, alpha=0.75) +
     geom_vline(xintercept = v, linetype = "dashed") +
-    labs(title = " Model Coefficients", x = "Coefficient Estimate") +
+    labs(title = " Model Coefficients", x =  xlab) +
     theme_minimal() +
     scale_x_continuous(n.breaks=10)
 

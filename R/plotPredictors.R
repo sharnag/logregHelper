@@ -9,23 +9,23 @@
 #' my_plots <- plotPredictors(fittedModel)
 #' my_plots[[1]]
 #'
-#' @importFrom ggplot2 ggplot aes geom_point labs theme_minimal
+#' @importFrom ggplot2 ggplot aes geom_point labs theme_minimal geom_smooth
 #' @importFrom magrittr %>%
 #' @importFrom plotly plot_ly add_markers layout
 #' @importFrom rlang sym
 #'
 #' @export
-plotPredictors <- function(fittedModel, interactive=F) UseMethod('plotPredictors')
+plotPredictors <- function(fittedModel, smooth=T, interactive=F) UseMethod('plotPredictors')
 
 #'
 #' @export
-plotPredictors.glm <- function(fittedModel, interactive=F){
-  # TODO: customise colours and markers?
+plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
 
   # get the numerical terms used in the model
   # TODO, doesn't work for polynomial terms e.g.  "poly(age, 2)"
   numerical_cols <- colnames(fittedModel$data[,sapply(fittedModel$data,is.numeric)])
-  # TODO if no numerical terms then when should inform the user
+  # TODO if no numerical terms then when should warn the user and end execution
+
   model_terms <- attr(fittedModel$terms, "term.labels")
   numerical_terms <- intersect(numerical_cols, model_terms)
 
@@ -72,15 +72,15 @@ plotPredictors.glm <- function(fittedModel, interactive=F){
   }
   else{
     # Plot non-interactive plots using ggplot2
-
-    # TODO geom_smooth is slow, causes R to crash
     diagnostic_plots <- list()
     for (i in numerical_terms) {
       var <- rlang::sym(i)
-      diagnostic_plots[[i]] <- ggplot2::ggplot(data_copy,aes(x=!!var, y=.fitted))+
+      temp_plot <- ggplot2::ggplot(data_copy,aes(x=!!var, y=.fitted))+
         geom_point(color='steelblue') +
         labs(y="Logit") +
         theme_minimal()
+      if(smooth) {temp_plot <- temp_plot + ggplot2::geom_smooth(method='loess', color='orange', fill='orange')}
+      diagnostic_plots[[i]] <- temp_plot
 
     }
     # Return list object of ggplots

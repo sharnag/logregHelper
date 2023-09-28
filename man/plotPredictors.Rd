@@ -2,9 +2,9 @@
 % Please edit documentation in R/plotPredictors.R
 \name{plotPredictors}
 \alias{plotPredictors}
-\title{Plot Logit against Numerical Predictors}
+\title{Plot Logit of Response against Numerical Predictors}
 \usage{
-plotPredictors(fittedModel, interactive = F)
+plotPredictors(fittedModel, smooth = T, interactive = F)
 }
 \arguments{
 \item{fittedModel}{A fitted \code{glm} model object of family \code{binomial}.}

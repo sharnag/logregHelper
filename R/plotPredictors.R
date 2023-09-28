@@ -22,17 +22,17 @@ plotPredictors <- function(fittedModel, smooth=T, interactive=F) UseMethod('plot
 plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
 
   # Check that fittedModel is a glm object of family binomial
-  if(!("glm" %in% class(fittedModel))){ stop(paste("The model must be a glm object")) }
-  if(!("binomial" %in% fittedModel$family)) { stop(paste("The glm object must have family = binomial"))  }
+  if(!("glm" %in% class(fittedModel))){ stop(paste("The model must be a glm object.")) }
+  if(!("binomial" %in% fittedModel$family)) { stop(paste("The glm object must have family = binomial."))  }
 
-
+  # TODO, need to decide how to handle polynomial terms "poly(age, 2)" and models with interaction
   # get the numerical terms used in the model
-  # TODO, doesn't work for polynomial terms e.g.  "poly(age, 2)"
   numerical_cols <- colnames(fittedModel$data[,sapply(fittedModel$data,is.numeric)])
-  # TODO if no numerical terms then when should warn the user and end execution
-
   model_terms <- attr(fittedModel$terms, "term.labels")
   numerical_terms <- intersect(numerical_cols, model_terms)
+
+  # if no numerical terms in the model then return an error message
+  if (length(numerical_terms)==0) {stop(paste("The model has no numerical predictors."))}
 
   # Get a copy of the data with additional columns
   data_copy <- addCols(fittedModel)

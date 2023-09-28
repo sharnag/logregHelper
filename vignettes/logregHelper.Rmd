@@ -38,7 +38,7 @@ There are currently two main functions in the package:
 
 - `viewCoef` view the estimated coefficients and confidence intervals
 
-In this vignette we will provide examples on how to use them.
+In this vignette we will provide examples of how to use them.
 
 The required inputs for the functions are fitted `glm` models of family "binomial", for example:
 ```{r, eval=FALSE}

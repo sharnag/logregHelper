@@ -4,15 +4,18 @@
 #'
 #' @param model_list A list of fitted `glm` models object of family `binomial`.
 #' @param alpha The significance level of the LR test. Default is 0.05.
+#' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
 #' @param override `logical`. If `TRUE` then perform the LR test for all pairs in the input list; if `FALSE` then only perform the LR test for nested model pairs.
 #' @keywords fitted
 #' @examples
 #' new_data <- addCols(fittedModel)
 #'
 #' @importFrom insight is_nested_models
+#' @importFrom magrittr %>%
+#' @importFrom gt gt opt_stylize
 #'
 #' @export
-multipleLRTest <- function(model_list, alpha=0.05,override=F){
+multipleLRTest <- function(model_list, alpha=0.05, raw=F, override=F){
 
   # todo input checks
 
@@ -41,7 +44,7 @@ multipleLRTest <- function(model_list, alpha=0.05,override=F){
   m_df <- rep(NA, n)
 
   for (i in 1:n){
-    m_formula[i] <- format(model_list[[i]]$formula)
+    m_formula[i] <- paste(format(model_list[[i]]$formula), collapse=" ")
     m_dev[i] <- model_list[[i]]$deviance
     m_df[i] <- model_list[[i]]$df.residual
   }
@@ -51,7 +54,7 @@ multipleLRTest <- function(model_list, alpha=0.05,override=F){
 
  # Create results dataframe
  rejectH0 <- ifelse(list_LR$pvals<alpha, 'Yes', 'No')
- rejectH0 <- ifelse((list_LR$df==0 & list_LR$pvals==1), 'Invalid', rejectH0)
+ rejectH0 <- ifelse((list_LR$df==0), 'Check Models', rejectH0)
 
  results <- data.frame(rejectH0,
                        pvals=signif(list_LR$pvals,4),
@@ -59,6 +62,16 @@ multipleLRTest <- function(model_list, alpha=0.05,override=F){
                        df=list_LR$df,
                        m1=m_formula[list_LR$m1_index],
                        m2=m_formula[list_LR$m2_index])
+
+ # TODO: add col headers, rejectH0 (alpha = x)
+
+ if(!raw){
+   # Convert data.frame to ("gt_tbl" "list")
+   results <- results %>%
+     gt::gt() %>%
+     gt::opt_stylize(style = 5)
+
+ }
 
  return(results)
 }

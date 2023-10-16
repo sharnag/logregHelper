@@ -36,9 +36,13 @@ List rcpp_multipleLRTest(NumericVector dev_vec, IntegerVector df_vec, NumericMat
         test_dev = abs(dev_vec[i] - dev_vec[j]);
         test_df = abs(df_vec[i] - df_vec[j]);
 
-        if(test_df==0){
-          test_dev=0;
-          p[counter] = 1;
+        if(test_df==0){ //models are not nested
+          if(test_dev==0) { //models are the same
+            p[counter] = 1;
+          } else{
+            p[counter] = 0;
+          }
+
         } else{
           boost::math::chi_squared mydist(test_df);
           p[counter] = 1-boost::math::cdf(mydist,test_dev);

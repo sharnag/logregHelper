@@ -4,12 +4,14 @@
 \alias{multipleLRTest}
 \title{Likelihood Ratio Test}
 \usage{
-multipleLRTest(model_list, alpha = 0.05, override = F)
+multipleLRTest(model_list, alpha = 0.05, raw = F, override = F)
 }
 \arguments{
 \item{model_list}{A list of fitted \code{glm} models object of family \code{binomial}.}
 
 \item{alpha}{The significance level of the LR test. Default is 0.05.}
+
+\item{raw}{\code{logical}. If \code{TRUE} then return the values in a \code{data.frame} object, if \code{FALSE} return the values in a \code{gt} table object (default).}
 
 \item{override}{\code{logical}. If \code{TRUE} then perform the LR test for all pairs in the input list; if \code{FALSE} then only perform the LR test for nested model pairs.}
 }

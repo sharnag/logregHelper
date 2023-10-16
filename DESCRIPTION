@@ -8,21 +8,25 @@ Authors@R:
 Description: This package provides helper functions for logistic regression models fitted using `glm`. 
     The functions are intended to assist with model diagnostics and model selction.
 Imports:
-  ggplot2,
-  magrittr,
-  plotly,
-  dplyr,
-  rlang,
-  stats,
-  gt
+    ggplot2,
+    magrittr,
+    plotly,
+    dplyr,
+    rlang,
+    stats,
+    gt,
+    Rcpp
 License: -
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Suggests: 
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
+LinkingTo: 
+    Rcpp,
+    BH

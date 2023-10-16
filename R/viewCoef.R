@@ -35,9 +35,8 @@ viewCoef <- function(fittedModels, exp=F, plot=F, raw=F, ci=0.95, ci_normal=F, s
     fittedModels <- list(fittedModels)
   }
 
-  # Check each model is
+  # Check each model is a glm object of family binomial
   for(m in fittedModels) {
-    # Check that fittedModel is a glm object of family binomial
     if(!("glm" %in% class(m))){ stop(paste("Not all models in list are glm objects.")) }
     if(!("binomial" %in% m$family)) { stop(paste("Not all models in list have family = binomial."))  }
   }

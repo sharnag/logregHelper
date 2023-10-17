@@ -1,0 +1,180 @@
+#' Compare GLM models
+#'
+#' Function used create list of glm objects of class 'compareGLM'
+#'
+#' @param ... one or more fitted `glm` model objects of family `binomial`.
+#' @keywords list glm
+#' @examples
+#' x <- compareGLM(fittedModel1, fittedModel2, fittedModel3)
+#'
+#'
+#' @export
+compareGLM <- function(...){
+  fittedModels <- list(...)
+
+  # Check each model is a glm object of family binomial
+  for(m in fittedModels) {
+    if(!("glm" %in% class(m))){ stop(paste("Not all objects passed are glm objects.")) }
+    if(!("binomial" %in% m$family)) { stop(paste("Not all models passed have family = binomial."))  }
+  }
+
+  class(fittedModels) <- 'compareGLM'
+  return(fittedModels)
+}
+
+
+
+#' Logistic Regression Coefficients and Confidence Intervals
+#'
+#' S3 method for class 'compareGLM' used to present the model coefficient estimates and confidence intervals of one or more `glm` objects in a gt table or data.frame.
+#'
+#' @param x An object of class 'compareGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
+#' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
+#' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
+#' @param ci The confidence interval level required.
+#' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
+#' @param sigfig The number of significant figures to round the results to.
+#' @param expand `logical`. If `TRUE` then additionally return the standard errors, z values and p-values from the glm summary object.
+#' @keywords coefficients, confidence interval, forest plot
+#' @examples
+#' modelList <- compareGLM(fittedModel1, fittedModel2)
+#' coef(modelList, exp=T)
+#'
+#' @importFrom gt gt opt_stylize
+#'
+#' @export
+coef.compareGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand=F){
+
+  # Get the required coefficient dataframe
+  coef_data <- getCoef(x, exp, ci, ci_normal, sigfig)
+
+  # Return coefficients and CIs only
+  if(!expand) {
+    coef_data <- coef_data[,1:5]
+  }
+
+  if(!raw){
+    # Convert data.frame to ("gt_tbl" "list")
+    coef_data<- coef_data %>%
+      gt::gt() %>%
+      gt::opt_stylize(style = 1)
+
+  }
+  # Return data.frame object of gt table
+  return(coef_data)
+}
+
+
+
+#' Forest Plot of Logistic Regression Coefficient Estimates
+#'
+#' S3 method for class 'compareGLM' used to plot coefficient estimates and confidence intervals in a Forest Plot.
+#'
+#' @param x An object of class 'compareGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
+#' @param exp `logical`. If `TRUE` then the coefficients are exponentiated, so the x marker is 0; if `FALSE`, x marker is 1.
+#' @keywords forest plot, confidence interval
+#' @examples
+#' modelList <- compareGLM(fittedModel1, fittedModel2)
+#' plot(modelList)
+#'
+#' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh position_dodge geom_vline labs theme_minimal scale_x_continuous
+#'
+#' @export
+plot.compareGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
+
+  # Get the required coefficient dataframe
+  coef_data <- getCoef(x, exp, ci, ci_normal, sigfig)
+
+  # Show vertical line at 0 for log-odds ratio
+  v<-0
+  xlab <- "Coefficient Estimate"
+  # Show vertical line at 1 for odds ratio
+  if(exp) {
+    v <- 1
+    xlab <- "Exponentiated Coefficient Estimate"
+  }
+
+  # Create a forest plot with stacked points for each Model
+  ggplot2::ggplot(coef_data, aes(y = Variable, x=Estimate, color=Model)) +
+    geom_point(position = position_dodge(width=0.4), size=2) +
+    geom_errorbarh(aes(xmin = Lower, xmax = Upper), position = position_dodge(width=0.4),
+                   height = 0.2, size=1, alpha=0.75) +
+    geom_vline(xintercept = v, linetype = "dashed") +
+    labs(title = " Model Coefficients", x =  xlab) +
+    theme_minimal() +
+    scale_x_continuous(n.breaks=10)
+
+}
+
+
+#' Get coefficients from GLM models
+#'
+#' Get coefficients and other values from GLM models, used internally by methods for the 'compareGLM' class.
+#'
+#' @param fittedModels A list of fitted `glm` model objects of family `binomial`, of class 'compareGLM'.
+#' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
+#' @param ci The confidence interval level required.
+#' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
+#' @param sigfig The number of significant figures to round the results to.
+#' @keywords coefficients, confidence interval, glm
+#' @examples
+#' coef <- getCoef(compareGLM(fittedModel1, fittedModel2, fittedModel3))
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stats confint confint.default
+#' @importFrom dplyr relocate
+#'
+#' @export
+getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
+
+  # TODO check fittedModels is of class compareGLM
+  #TODO check ci range is valid
+  # check everything is valid
+
+
+  # Get required data from each model
+  vals <- NULL
+  model_num <- 1
+
+  for(m in fittedModels){
+    summ <- summary(m)
+    c1_est <- m$coefficients
+    if(ci_normal){ c2_ci<- stats::confint.default(m, level = ci) }
+    else { c2_ci<- stats::confint(m, level = ci) }
+    c3_se<- summ$coefficients[,"Std. Error"]
+    c4_z<-summ$coefficients[,"z value"]
+    c5_p<-summ$coefficients[,"Pr(>|z|)"]
+
+    # Exponentiate estimates and CIs
+    if(exp){
+      c1_est <- exp(c1_est)
+      c2_ci <- exp(c2_ci)
+    }
+    newvals <- signif(cbind(c1_est, c2_ci, c3_se, c4_z, c5_p), sigfig)
+    newvals <- cbind(newvals, paste0("M",model_num))
+
+    # append data from each model to the existing vals object
+    vals <- rbind(vals, newvals)
+    model_num <- model_num+1
+  }
+
+  # Reformat the data
+  coef_data<- cbind(rownames(vals), data.frame(vals, row.names=NULL))
+  colnames(coef_data) <- c("Variable", "Estimate", "Lower", "Upper", "SE", "z value", "p-value", "Model")
+  coef_data <- coef_data %>% dplyr::relocate(Model)
+
+  coef_data$Estimate <- as.numeric(coef_data$Estimate)
+  coef_data$Lower <- as.numeric(coef_data$Lower)
+  coef_data$Upper <- as.numeric(coef_data$Upper)
+  coef_data$SE <- as.numeric(coef_data$SE)
+  coef_data$'z value' <- as.numeric(coef_data$'z value' )
+  coef_data$'p-value'  <- as.numeric(coef_data$'p-value' )
+
+  # Re-order rows based on variable groupings
+  coef_data <- coef_data[order(coef_data$Variable,coef_data$Model ),]
+
+  # Return dataframe
+  return(coef_data)
+
+}
+

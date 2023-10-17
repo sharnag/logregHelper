@@ -22,4 +22,6 @@ Performs a likelihood ratio test between pairs of models in a given list.
 new_data <- addCols(fittedModel)
 
 }
-\keyword{fitted}
+\keyword{likelihood}
+\keyword{ratio}
+\keyword{test}

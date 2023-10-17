@@ -6,7 +6,7 @@
 #' @param alpha The significance level of the LR test. Default is 0.05.
 #' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
 #' @param override `logical`. If `TRUE` then perform the LR test for all pairs in the input list; if `FALSE` then only perform the LR test for nested model pairs.
-#' @keywords fitted
+#' @keywords likelihood ratio test
 #' @examples
 #' new_data <- addCols(fittedModel)
 #'

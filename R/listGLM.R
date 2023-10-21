@@ -119,7 +119,7 @@ plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
 #' Get coefficients from GLM models
 #'
-#' Get coefficients and other values from GLM models, used internally by methods for the 'listGLM' class.
+#' S3 method for class 'listGLM. Get coefficients, std errors, z and p values for each model in 'listGLM' object.
 #'
 #' @param fittedModels An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
@@ -138,7 +138,7 @@ plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6) UseMethod('getCoef')
 
 #' @export
-getCoef.default <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6) print("Function is only available to glm objects.")
+getCoef.default <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6) print("Function is only available to listGLM objects.")
 
 #' @export
 getCoef.listGLM <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
@@ -167,10 +167,10 @@ getCoef.listGLM <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6)
       c1_est <- exp(c1_est)
       c2_ci <- exp(c2_ci)
     }
-    newvals <- signif(cbind(c1_est, c2_ci, c3_se, c4_z, c5_p), sigfig)
-    newvals <- cbind(newvals, paste0("M",model_num))
 
     # append data from each model to the existing vals object
+    newvals <- signif(cbind(c1_est, c2_ci, c3_se, c4_z, c5_p), sigfig)
+    newvals <- cbind(newvals,paste0("M",model_num))
     vals <- rbind(vals, newvals)
 
     # store model formula separately
@@ -182,8 +182,9 @@ getCoef.listGLM <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6)
   }
 
   # Reformat the data
+  # Set row name (variable) as first column
   coef_data<- cbind(rownames(vals), data.frame(vals, row.names=NULL))
-  colnames(coef_data) <- c("Variable", "Estimate", "Lower", "Upper", "SE", "z value", "p-value", "Model")
+  colnames(coef_data) <- c("Variable", "Estimate", "Lower", "Upper", "SE", "z value", "p-value","Model")
   coef_data <- coef_data %>% dplyr::relocate(Model)
 
   coef_data$Estimate <- as.numeric(coef_data$Estimate)

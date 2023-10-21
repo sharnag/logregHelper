@@ -18,7 +18,7 @@ getCoef(fittedModels, exp = F, ci = 0.95, ci_normal = F, sigfig = 6)
 \item{sigfig}{The number of significant figures to round the results to.}
 }
 \description{
-Get coefficients and other values from GLM models, used internally by methods for the 'listGLM' class.
+S3 method for class 'listGLM. Get coefficients, std errors, z and p values for each model in 'listGLM' object.
 }
 \examples{
 coef <- getCoef(listGLM(fittedModel1, fittedModel2, fittedModel3))

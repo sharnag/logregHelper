@@ -17,7 +17,8 @@ Imports:
     gt,
     Rcpp,
     insight, 
-    lmtest
+    lmtest,
+    DescTools
 License: -
 Encoding: UTF-8
 LazyData: true

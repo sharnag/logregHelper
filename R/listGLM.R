@@ -45,23 +45,32 @@ listGLM <- function(...){
 #' @export
 coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand=F){
 
-  # Get the required coefficient dataframe
-  coef_data <- getCoef(x, exp, ci, ci_normal, sigfig)
+  # Get the required coefficient list (data and formulae)
+  coef_list <- getCoef(x, exp, ci, ci_normal, sigfig)
 
   # Return coefficients and CIs only
   if(!expand) {
-    coef_data <- coef_data[,1:5]
+    coef_list$data <- coef_list$data[,1:5]
+  } else {
+    coef_list$data <- coef_list$data[,1:8]
   }
 
+
   if(!raw){
-    # Convert data.frame to ("gt_tbl" "list")
-    coef_data<- coef_data %>%
+    # Convert data.frames to ("gt_tbl" "list") objects
+    gt_data <- coef_list$data %>%
       gt::gt() %>%
       gt::opt_stylize(style = 1)
 
+    gt_formula <- coef_list$formula %>%
+      gt::gt() %>%
+      gt::opt_stylize(style = 1)
+
+    return(gt_group(gt_data, gt_formula))
   }
+
   # Return data.frame object of gt table
-  return(coef_data)
+  return(coef_list)
 }
 
 
@@ -82,8 +91,9 @@ coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand
 #' @export
 plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
-  # Get the required coefficient dataframe
-  coef_data <- getCoef(x, exp, ci, ci_normal, sigfig)
+  # Get the required coefficient list (data and formulae)
+  coef_list <- getCoef(x, exp, ci, ci_normal, sigfig)
+  coef_data <- coef_list$data
 
   # Show vertical line at 0 for log-odds ratio
   v<-0
@@ -134,6 +144,7 @@ getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
   # Get required data from each model
   vals <- NULL
+  model_formulae <- NULL
   model_num <- 1
 
   for(m in fittedModels){
@@ -155,6 +166,12 @@ getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
     # append data from each model to the existing vals object
     vals <- rbind(vals, newvals)
+
+    # store model formula separately
+    model_formula <- paste(format(m$formula), collapse=" ")
+    model_formula <- cbind(paste0("M",model_num), model_formula)
+    model_formulae <- rbind(model_formulae, model_formula)
+
     model_num <- model_num+1
   }
 
@@ -173,8 +190,16 @@ getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
   # Re-order rows based on variable groupings
   coef_data <- coef_data[order(coef_data$Variable,coef_data$Model ),]
 
-  # Return dataframe
-  return(coef_data)
+
+  # Reformat formulae
+  model_formulae <- as.data.frame(c_data$formula)
+  colnames(model_formulae) <- c("Model", "Formula")
+
+  # Return list
+  return_data<- list()
+  return_data$data <- coef_data
+  return_data$formula <- model_formulae
+  return(return_data)
 
 }
 

@@ -7,7 +7,7 @@
 getCoef(fittedModels, exp = F, ci = 0.95, ci_normal = F, sigfig = 6)
 }
 \arguments{
-\item{fittedModels}{A list of fitted \code{glm} model objects of family \code{binomial}, of class 'listGLM'.}
+\item{fittedModels}{An object of class 'listGLM' i.e. a list of fitted \code{glm} model object(s) of family \code{binomial}.}
 
 \item{exp}{\code{logical}. If \code{TRUE} then exponentiate the coefficients and confidence intervals; if \code{FALSE} do not exponentiate (default).}
 

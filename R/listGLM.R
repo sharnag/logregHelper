@@ -121,7 +121,7 @@ plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 #'
 #' Get coefficients and other values from GLM models, used internally by methods for the 'listGLM' class.
 #'
-#' @param fittedModels A list of fitted `glm` model objects of family `binomial`, of class 'listGLM'.
+#' @param fittedModels An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
 #' @param ci The confidence interval level required.
 #' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
@@ -135,7 +135,13 @@ plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 #' @importFrom dplyr relocate
 #'
 #' @export
-getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
+getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6) UseMethod('getCoef')
+
+#' @export
+getCoef.default <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6) print("Function is only available to glm objects.")
+
+#' @export
+getCoef.listGLM <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
   # TODO check fittedModels is of class listGLM
   #TODO check ci range is valid
@@ -192,7 +198,7 @@ getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
 
   # Reformat formulae
-  model_formulae <- as.data.frame(c_data$formula)
+  model_formulae <- as.data.frame(model_formulae)
   colnames(model_formulae) <- c("Model", "Formula")
 
   # Return list

@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @examples
-#' list_LR <-multipleLRTest(m_dev, m_df, comparison_matrix)
+#' list_LR <-rcpp_multipleLRTest(m_dev, m_df, comparison_matrix)
 #' @export
 rcpp_multipleLRTest <- function(dev_vec, df_vec, comparison_matrix) {
     .Call(`_logregHelper_rcpp_multipleLRTest`, dev_vec, df_vec, comparison_matrix)

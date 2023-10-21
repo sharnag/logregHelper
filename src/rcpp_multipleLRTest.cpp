@@ -12,7 +12,7 @@ using namespace Rcpp;
 //'
 //' @export
 //' @examples
-//' list_LR <-multipleLRTest(m_dev, m_df, comparison_matrix)
+//' list_LR <-rcpp_multipleLRTest(m_dev, m_df, comparison_matrix)
 //' @export
 // [[Rcpp::export]]
 List rcpp_multipleLRTest(NumericVector dev_vec, IntegerVector df_vec, NumericMatrix comparison_matrix) {

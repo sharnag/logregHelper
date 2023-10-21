@@ -16,7 +16,8 @@ Imports:
     stats,
     gt,
     Rcpp,
-    insight
+    insight, 
+    lmtest
 License: -
 Encoding: UTF-8
 LazyData: true

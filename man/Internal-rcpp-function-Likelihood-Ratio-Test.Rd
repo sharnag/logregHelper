@@ -14,5 +14,5 @@ Internal rcpp function - Likelihood Ratio Test
 Internal rcpp function that performs a likelihood ratio test between pairs of models. Returns the p-values and model indicies.
 }
 \examples{
-list_LR <-multipleLRTest(m_dev, m_df, comparison_matrix)
+list_LR <-rcpp_multipleLRTest(m_dev, m_df, comparison_matrix)
 }

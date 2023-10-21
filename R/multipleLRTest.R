@@ -1,25 +1,30 @@
-#' Likelihood Ratio Test
+#' Likelihood Ratio Test for Multiple Models
 #'
-#' Performs a likelihood ratio test between pairs of models in a given list.
+#' S3 method for class 'listGLM'. Performs a likelihood ratio test between pairs of models in a given listGLM object.
 #'
-#' @param model_list A list of fitted `glm` models object of family `binomial`.
+#' @param model_list An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param alpha The significance level of the LR test. Default is 0.05.
 #' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
 #' @param override `logical`. If `TRUE` then perform the LR test for all pairs in the input list; if `FALSE` then only perform the LR test for nested model pairs.
 #' @keywords likelihood ratio test
 #' @examples
-#' new_data <- addCols(fittedModel)
+#' modelList <- listGLM(fittedModel1, fittedModel2, fittedModel2)
+#' lrtest(modelList)
 #'
 #' @importFrom insight is_nested_models
 #' @importFrom magrittr %>%
 #' @importFrom gt gt opt_stylize
+#' @importFrom lmtest lrtest
 #'
 #' @export
-multipleLRTest <- function(model_list, alpha=0.05, raw=F, override=F){
+lrtest.listGLM <- function(model_list, alpha=0.05, raw=F, override=F){
 
   # todo input checks
 
   n <- length(model_list)
+  # todo if this is 1, stop here.
+
+
   # Create a comparison matrix indicating which models are nested
   comparison_matrix <- matrix(0,nrow = n, ncol = n)
 

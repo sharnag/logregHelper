@@ -1,15 +1,15 @@
-#' Compare GLM models
+#' List GLM models
 #'
-#' Function used create list of glm objects of class 'compareGLM'
+#' Function used create list of glm objects of class 'listGLM'
 #'
 #' @param ... one or more fitted `glm` model objects of family `binomial`.
 #' @keywords list glm
 #' @examples
-#' x <- compareGLM(fittedModel1, fittedModel2, fittedModel3)
+#' x <- listGLM(fittedModel1, fittedModel2, fittedModel3)
 #'
 #'
 #' @export
-compareGLM <- function(...){
+listGLM <- function(...){
   fittedModels <- list(...)
 
   # Check each model is a glm object of family binomial
@@ -18,7 +18,7 @@ compareGLM <- function(...){
     if(!("binomial" %in% m$family)) { stop(paste("Not all models passed have family = binomial."))  }
   }
 
-  class(fittedModels) <- 'compareGLM'
+  class(fittedModels) <- 'listGLM'
   return(fittedModels)
 }
 
@@ -26,9 +26,9 @@ compareGLM <- function(...){
 
 #' Logistic Regression Coefficients and Confidence Intervals
 #'
-#' S3 method for class 'compareGLM' used to present the model coefficient estimates and confidence intervals of one or more `glm` objects in a gt table or data.frame.
+#' S3 method for class 'listGLM' used to present the model coefficient estimates and confidence intervals of one or more `glm` objects in a gt table or data.frame.
 #'
-#' @param x An object of class 'compareGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
+#' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
 #' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
 #' @param ci The confidence interval level required.
@@ -37,13 +37,13 @@ compareGLM <- function(...){
 #' @param expand `logical`. If `TRUE` then additionally return the standard errors, z values and p-values from the glm summary object.
 #' @keywords coefficients, confidence interval, forest plot
 #' @examples
-#' modelList <- compareGLM(fittedModel1, fittedModel2)
+#' modelList <- listGLM(fittedModel1, fittedModel2)
 #' coef(modelList, exp=T)
 #'
 #' @importFrom gt gt opt_stylize
 #'
 #' @export
-coef.compareGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand=F){
+coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand=F){
 
   # Get the required coefficient dataframe
   coef_data <- getCoef(x, exp, ci, ci_normal, sigfig)
@@ -68,19 +68,19 @@ coef.compareGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, exp
 
 #' Forest Plot of Logistic Regression Coefficient Estimates
 #'
-#' S3 method for class 'compareGLM' used to plot coefficient estimates and confidence intervals in a Forest Plot.
+#' S3 method for class 'listGLM' used to plot coefficient estimates and confidence intervals in a Forest Plot.
 #'
-#' @param x An object of class 'compareGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
+#' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then the coefficients are exponentiated, so the x marker is 0; if `FALSE`, x marker is 1.
 #' @keywords forest plot, confidence interval
 #' @examples
-#' modelList <- compareGLM(fittedModel1, fittedModel2)
+#' modelList <- listGLM(fittedModel1, fittedModel2)
 #' plot(modelList)
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh position_dodge geom_vline labs theme_minimal scale_x_continuous
 #'
 #' @export
-plot.compareGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
+plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
   # Get the required coefficient dataframe
   coef_data <- getCoef(x, exp, ci, ci_normal, sigfig)
@@ -109,16 +109,16 @@ plot.compareGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
 #' Get coefficients from GLM models
 #'
-#' Get coefficients and other values from GLM models, used internally by methods for the 'compareGLM' class.
+#' Get coefficients and other values from GLM models, used internally by methods for the 'listGLM' class.
 #'
-#' @param fittedModels A list of fitted `glm` model objects of family `binomial`, of class 'compareGLM'.
+#' @param fittedModels A list of fitted `glm` model objects of family `binomial`, of class 'listGLM'.
 #' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
 #' @param ci The confidence interval level required.
 #' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
 #' @param sigfig The number of significant figures to round the results to.
 #' @keywords coefficients, confidence interval, glm
 #' @examples
-#' coef <- getCoef(compareGLM(fittedModel1, fittedModel2, fittedModel3))
+#' coef <- getCoef(listGLM(fittedModel1, fittedModel2, fittedModel3))
 #'
 #' @importFrom magrittr %>%
 #' @importFrom stats confint confint.default
@@ -127,7 +127,7 @@ plot.compareGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 #' @export
 getCoef <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
-  # TODO check fittedModels is of class compareGLM
+  # TODO check fittedModels is of class listGLM
   #TODO check ci range is valid
   # check everything is valid
 

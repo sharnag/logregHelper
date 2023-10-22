@@ -40,7 +40,7 @@ listGLM <- function(...){
 #' modelList <- listGLM(fittedModel1, fittedModel2)
 #' coef(modelList, exp=T)
 #'
-#' @importFrom gt gt opt_stylize
+#' @importFrom gt gt opt_stylize gt_group
 #'
 #' @export
 coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand=F){
@@ -78,7 +78,7 @@ coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand
       gt::gt() %>%
       gt::opt_stylize(style = 1)
     # Return gt group object
-    return(gt_group(gt_data, gt_formula))
+    return(gt::gt_group(gt_data, gt_formula))
   }
 
   # Return data.frame object
@@ -133,7 +133,7 @@ plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
   ggplot2::ggplot(coef_data, aes(y = Variable, x=Estimate, color=Model)) +
     geom_point(position = position_dodge(width=0.4), size=2) +
     geom_errorbarh(aes(xmin = Lower, xmax = Upper), position = position_dodge(width=0.4),
-                   height = 0.2, size=1, alpha=0.75) +
+                   height = 0.2, linewidth=1, alpha=0.75) +
     geom_vline(xintercept = v, linetype = "dashed") +
     labs(title = " Model Coefficients", x =  xlab) +
     theme_minimal() +

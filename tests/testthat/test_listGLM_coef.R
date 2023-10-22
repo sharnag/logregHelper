@@ -32,14 +32,14 @@ test_that("coef.listGLM gives helpful errors for invalid inputs", {
 test_that("coef.listGLM works with valid input arguments", {
   expect_silent(coef(listGLM_obj))
   expect_silent(coef(listGLM_obj,exp=T))
-  expect_silent(coef(listGLM_obj,exp=F))
+  expect_silent(coef(listGLM_obj,raw=T))
   expect_silent(coef(listGLM_obj,ci=0.8))
   expect_silent(coef(listGLM_obj,ci_normal=T))
   expect_silent(coef(listGLM_obj,sigfig=4))
   expect_silent(coef(listGLM_obj,expand=F))
 
   # The confint function results in this warning 22 times: "glm.fit: fitted probabilities numerically 0 or 1 occurred"
-  expect_snapshot(coef(listGLM_obj_w))
+  expect_snapshot(coef(listGLM_obj_w, raw=T))
 })
 
 

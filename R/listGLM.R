@@ -14,8 +14,8 @@ listGLM <- function(...){
 
   # Check each model is a glm object of family binomial
   for(m in fittedModels) {
-    if(!("glm" %in% class(m))){ stop(paste("Not all objects passed are glm objects.")) }
-    if(!("binomial" %in% m$family)) { stop(paste("Not all models passed have family = binomial."))  }
+    if(!("glm" %in% class(m))){ stop(paste("Check that all objects in input are glm objects.")) }
+    if(!("binomial" %in% m$family)) { stop(paste("Check that all glm models in input have family = binomial."))  }
   }
 
   class(fittedModels) <- 'listGLM'

@@ -45,6 +45,18 @@ listGLM <- function(...){
 #' @export
 coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand=F){
 
+  # Check inputs
+  if(class(x) != "listGLM") {stop(paste("The input is not a listGLM object"))}
+  if(!is.logical(exp)){stop(paste("Argument 'exp' must be logical"))}
+  if(!is.logical(raw)){stop(paste("Argument 'raw' must be logical"))}
+  if(!is.logical(ci_normal)){stop(paste("Argument 'ci_normal' must be logical"))}
+  if(!is.logical(expand)){stop(paste("Argument 'expand' must be logical"))}
+  if(!is.numeric(ci)){stop(paste("Argument 'ci' must be a numeric value between 0 and 1"))}
+  if(ci>=1 || ci < 0){stop(paste("Argument 'ci' must be a numeric value between 0 and 1"))}
+  if(!is.numeric(sigfig)){stop(paste("Argument 'sigfig' must be an integer greater than 0"))}
+  if(sigfig%%1!=0 || sigfig < 0){stop(paste("Argument 'sigfig' must be an integer greater than 0"))}
+
+
   # Get the required coefficient list (data and formulae)
   coef_list <- getCoef(x, exp, ci, ci_normal, sigfig)
 
@@ -156,8 +168,8 @@ getCoef.listGLM <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6)
   for(m in fittedModels){
     summ <- summary(m)
     c1_est <- m$coefficients
-    if(ci_normal){ c2_ci<- stats::confint.default(m, level = ci) }
-    else { c2_ci<- stats::confint(m, level = ci) }
+    if(ci_normal){ c2_ci<- suppressMessages(stats::confint.default(m, level = ci)) }
+    else { c2_ci<- suppressMessages(stats::confint(m, level = ci)) }
     c3_se<- summ$coefficients[,"Std. Error"]
     c4_z<-summ$coefficients[,"z value"]
     c5_p<-summ$coefficients[,"Pr(>|z|)"]
@@ -169,7 +181,13 @@ getCoef.listGLM <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6)
     }
 
     # append data from each model to the existing vals object
-    newvals <- signif(cbind(c1_est, c2_ci, c3_se, c4_z, c5_p), sigfig)
+    if(length(c2_ci) == 2) {
+      # Intercept only model
+      newvals <- signif(cbind(c1_est, c2_ci[[1]], c2_ci[[2]], c3_se, c4_z, c5_p), sigfig)
+    } else {
+      newvals <- signif(cbind(c1_est, c2_ci, c3_se, c4_z, c5_p), sigfig)
+    }
+
     newvals <- cbind(newvals,paste0("M",model_num))
     vals <- rbind(vals, newvals)
 

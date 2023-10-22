@@ -23,9 +23,15 @@ plotPredictors.default <- function(fittedModel, smooth=T, interactive=F) print("
 #' @export
 plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
 
+  # Check inputs
+  if(!is.logical(smooth)){stop(paste("Argument 'smooth' must be logical"))}
+  if(!is.logical(interactive)){stop(paste("Argument 'interactive' must be logical"))}
+
   # Check that fittedModel is a glm object of family binomial
   if(!("glm" %in% class(fittedModel))){ stop(paste("The model must be a glm object.")) }
   if(!("binomial" %in% fittedModel$family)) { stop(paste("The glm object must have family = binomial."))  }
+
+
 
   # TODO, need to decide how to handle polynomial terms "poly(age, 2)" and models with interaction
   # get the numerical terms used in the model

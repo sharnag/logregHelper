@@ -4,14 +4,14 @@
 \alias{compare}
 \title{Compare GLM models using various criteria}
 \usage{
-compare(fittedModels, raw = F, sigfig = 4, expand = F)
+compare(x, raw = F, sigfig = 4, expand = F)
 }
 \arguments{
-\item{fittedModels}{An object of class 'listGLM' i.e. a list of fitted \code{glm} model object(s) of family \code{binomial}.}
+\item{x}{An object of class 'listGLM' i.e. a list of fitted \code{glm} model object(s) of family \code{binomial}.}
 
 \item{raw}{\code{logical}. If \code{TRUE} then return the values in a \code{data.frame} object, if \code{FALSE} return the values in a \code{gt} table object (default).}
 
-\item{sigfig}{The number of significant figures to round the results to.}
+\item{sigfig}{The number of significant figures to round the results to. Default is 4.}
 
 \item{expand}{\code{logical}. If  \code{FALSE} (default), return the AIC, BIC and McFadden's Pseudo R2-values. If TRUE` then return additional Pseudo-R2 values.}
 }

@@ -2,9 +2,9 @@
 #'
 #' S3 method for class 'listGLM'. Get AIC, BIC and Pseudo-R-squared values for each model in 'listGLM' object.
 #'
-#' @param fittedModels An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
+#' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
-#' @param sigfig The number of significant figures to round the results to.
+#' @param sigfig The number of significant figures to round the results to. Default is 4.
 #' @param expand `logical`. If  `FALSE` (default), return the AIC, BIC and McFadden's Pseudo R2-values. If TRUE` then return additional Pseudo-R2 values.
 #' @keywords aic, bic, compare, R-squared
 #' @examples
@@ -14,16 +14,24 @@
 #' @importFrom DescTools PseudoR2
 #'
 #' @export
-compare <- function(fittedModels, raw=F, sigfig=4, expand=F) UseMethod('compare')
+compare <- function(x, raw=F, sigfig=4, expand=F) UseMethod('compare')
 
 #' @export
-compare.default <- function(fittedModels, raw=F, sigfig=4, expand=F) print("Function is only available to listGLM objects.")
+compare.default <- function(x, raw=F, sigfig=4, expand=F) print("Function is only available to listGLM objects.")
 
 #' @export
-compare.listGLM <- function(fittedModels, raw=F, sigfig=4, expand=F){
+compare.listGLM <- function(x, raw=F, sigfig=4, expand=F){
+
+  # Check input
+  if(class(x) != "listGLM") {stop(paste("The input is not a listGLM object"))}
+  if(!is.logical(raw)){stop(paste("Argument 'raw' must be logical"))}
+  if(!is.logical(expand)){stop(paste("Argument 'expand' must be logical"))}
+  if(!is.numeric(sigfig)){stop(paste("Argument 'sigfig' must be an integer greater than 0"))}
+  if(sigfig%%1!=0 || sigfig < 0){stop(paste("Argument 'sigfig' must be an integer greater than 0"))}
+
   # Get criterion for each model
   vals <- NULL
-  for (m in listGLM_obj){
+  for (m in x){
     formula <-paste(format(m$formula), collapse=" ")
     AIC <- stats::AIC(m) # round
     BIC <- stats::BIC(m)

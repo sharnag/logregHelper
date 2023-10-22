@@ -103,6 +103,16 @@ coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand
 #' @export
 plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
+  # Check inputs
+  if(class(x) != "listGLM") {stop(paste("The input is not a listGLM object"))}
+  if(!is.logical(exp)){stop(paste("Argument 'exp' must be logical"))}
+  if(!is.logical(ci_normal)){stop(paste("Argument 'ci_normal' must be logical"))}
+  if(!is.numeric(ci)){stop(paste("Argument 'ci' must be a numeric value between 0 and 1"))}
+  if(ci>=1 || ci < 0){stop(paste("Argument 'ci' must be a numeric value between 0 and 1"))}
+  if(!is.numeric(sigfig)){stop(paste("Argument 'sigfig' must be an integer greater than 0"))}
+  if(sigfig%%1!=0 || sigfig < 0){stop(paste("Argument 'sigfig' must be an integer greater than 0"))}
+
+
   # Get the required coefficient list (data and formulae)
   coef_list <- getCoef(x, exp, ci, ci_normal, sigfig)
   coef_data <- coef_list$data

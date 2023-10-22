@@ -1,4 +1,4 @@
-# Unit tests for coef.listGLM()
+# Unit tests for coef.listGLM
 
 # Objects used for testing
 fit_glm0 <- glm(am ~ 1, data=mtcars, family = binomial(link = "logit"))
@@ -30,14 +30,11 @@ test_that("coef.listGLM gives helpful errors for invalid inputs", {
 })
 
 
-# (fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6, expand=F)
-
-
 ## Valid inputs testing
 test_that("coef.listGLM works with valid input arguments", {
-  # This should run with no errors or warnings
   expect_silent(coef(listGLM_obj))
   expect_silent(coef(listGLM_obj,exp=T))
+  expect_silent(coef(listGLM_obj,exp=F))
   expect_silent(coef(listGLM_obj,ci=0.8))
   expect_silent(coef(listGLM_obj,ci_normal=T))
   expect_silent(coef(listGLM_obj,sigfig=4))

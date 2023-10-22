@@ -3,8 +3,9 @@
 #' S3 method for class 'listGLM'. Get AIC, BIC and Pseudo-R-squared values for each model in 'listGLM' object.
 #'
 #' @param fittedModels An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
-#' @param expand `logical`. If  `FALSE` (default), return the AIC, BIC and McFadden's Pseudo R2-values. If TRUE` then return additional Pseudo-R2 values.
+#' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
 #' @param sigfig The number of significant figures to round the results to.
+#' @param expand `logical`. If  `FALSE` (default), return the AIC, BIC and McFadden's Pseudo R2-values. If TRUE` then return additional Pseudo-R2 values.
 #' @keywords aic, bic, compare, R-squared
 #' @examples
 #' compare(listGLM(fittedModel1, fittedModel2, fittedModel3),expand=T)
@@ -13,13 +14,13 @@
 #' @importFrom DescTools PseudoR2
 #'
 #' @export
-compare <- function(fittedModels, expand=F, sigfig=4) UseMethod('compare')
+compare <- function(fittedModels, raw=F, sigfig=4, expand=F) UseMethod('compare')
 
 #' @export
-compare.default <- function(fittedModels, expand=F, sigfig=4) print("Function is only available to listGLM objects.")
+compare.default <- function(fittedModels, raw=F, sigfig=4, expand=F) print("Function is only available to listGLM objects.")
 
 #' @export
-compare.listGLM <- function(fittedModels, expand=F, sigfig=4){
+compare.listGLM <- function(fittedModels, raw=F, sigfig=4, expand=F){
   # Get criterion for each model
   vals <- NULL
   for (m in listGLM_obj){
@@ -41,10 +42,26 @@ compare.listGLM <- function(fittedModels, expand=F, sigfig=4){
     vals <- rbind(vals, newvals)
   }
 
+  # Return AIC, BIC plus all Pseudo-R2 values OR just AIC, BIC and McFadden's R2 values.
   if (expand){
-    return(data.frame(vals))
+    df_data<- data.frame(vals)
   } else {
-    return(data.frame(vals)[,1:5])
+    df_data <- data.frame(vals)[,1:5]
   }
 
+
+  if(!raw){
+    # Convert data.frames to ("gt_tbl" "list") objects
+    gt_data <- df_data %>%
+      gt::gt() %>%
+      gt::opt_stylize(style = 1)
+
+    # Return gt  object
+    return(gt_data)
+  }
+
+  # Return data.frame object
+  return(df_data)
 }
+
+

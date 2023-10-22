@@ -4,14 +4,16 @@
 \alias{compare}
 \title{Compare GLM models using various criteria}
 \usage{
-compare(fittedModels, expand = F, sigfig = 4)
+compare(fittedModels, raw = F, sigfig = 4, expand = F)
 }
 \arguments{
 \item{fittedModels}{An object of class 'listGLM' i.e. a list of fitted \code{glm} model object(s) of family \code{binomial}.}
 
-\item{expand}{\code{logical}. If  \code{FALSE} (default), return the AIC, BIC and McFadden's Pseudo R2-values. If TRUE` then return additional Pseudo-R2 values.}
+\item{raw}{\code{logical}. If \code{TRUE} then return the values in a \code{data.frame} object, if \code{FALSE} return the values in a \code{gt} table object (default).}
 
 \item{sigfig}{The number of significant figures to round the results to.}
+
+\item{expand}{\code{logical}. If  \code{FALSE} (default), return the AIC, BIC and McFadden's Pseudo R2-values. If TRUE` then return additional Pseudo-R2 values.}
 }
 \description{
 S3 method for class 'listGLM'. Get AIC, BIC and Pseudo-R-squared values for each model in 'listGLM' object.

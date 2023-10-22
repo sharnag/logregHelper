@@ -65,11 +65,11 @@ coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand
     gt_formula <- coef_list$formula %>%
       gt::gt() %>%
       gt::opt_stylize(style = 1)
-
+    # Return gt group object
     return(gt_group(gt_data, gt_formula))
   }
 
-  # Return data.frame object of gt table
+  # Return data.frame object
   return(coef_list)
 }
 

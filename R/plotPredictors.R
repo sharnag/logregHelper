@@ -36,14 +36,15 @@ plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
   # if no numerical terms in the model then return an error message
   if (length(numerical_terms)==0) {stop(paste("The model has no numerical predictors."))}
 
-  # Get a copy of the data with additional columns
-  data_copy <- addCols(fittedModel)
+  # Calculate the logit of the predicted probabilities
+  data_copy <- fittedModel$data
+  data_copy$logitResp <- log(fittedModel$fitted.values / (1-fittedModel$fitted.values))
 
 
   if(interactive){
 
     # Use Plotly to create interactive plot
-    fig <- plotly::plot_ly(data_copy, y = ~.fitted)
+    fig <- plotly::plot_ly(data_copy, y = ~logitResp)
 
     # Add markers for each numerical predictor
     # Initially we show only the first predictor and hide the remaining plots
@@ -82,7 +83,7 @@ plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
     diagnostic_plots <- list()
     for (i in numerical_terms) {
       var <- rlang::sym(i)
-      temp_plot <- ggplot2::ggplot(data_copy,aes(x=!!var, y=.fitted))+
+      temp_plot <- ggplot2::ggplot(data_copy,aes(x=!!var, y=logitResp))+
         geom_point(color='steelblue') +
         labs(y="Logit") +
         theme_minimal()

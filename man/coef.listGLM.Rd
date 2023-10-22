@@ -11,13 +11,13 @@
 
 \item{exp}{\code{logical}. If \code{TRUE} then exponentiate the coefficients and confidence intervals; if \code{FALSE} do not exponentiate (default).}
 
-\item{raw}{\code{logical}. If \code{TRUE} then return the values in a \code{data.frame} object, if \code{FALSE} return the values in a \code{gt} table object (default).}
+\item{raw}{\code{logical}. If \code{TRUE} then return the values in a \code{list} of \code{data.frame} objects, if \code{FALSE} return the values in a \code{gt} group object (default).}
 
-\item{ci}{The confidence interval level required.}
+\item{ci}{The confidence interval level required. Default is 0.95.}
 
 \item{ci_normal}{\code{logical}. If \code{TRUE} then calculate the confidence interval based on asymptotic normality; if \code{FALSE} calculate the profile likelihood confidence interval using \code{confint} (default).}
 
-\item{sigfig}{The number of significant figures to round the results to.}
+\item{sigfig}{The number of significant figures to round the results to. Default is 6.}
 
 \item{expand}{\code{logical}. If \code{TRUE} then additionally return the standard errors, z values and p-values from the glm summary object.}
 }

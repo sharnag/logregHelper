@@ -5,8 +5,6 @@ fit_glm0 <- glm(am ~ 1, data=mtcars, family = binomial(link = "logit"))
 fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
 fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
 fit_glm3 <- glm(am ~ cyl + wt, data=mtcars, family = binomial(link = "logit"))
-fit_glm4 <- suppressWarnings(glm(am ~ cyl + hp * wt, data=mtcars, family = binomial(link = "logit")))
-fit_glm5 <- suppressWarnings(glm(am ~ cyl + hp + poly(wt, 2), data=mtcars, family = binomial(link = "logit")))
 
 listGLM_obj <- listGLM(fit_glm0,fit_glm2)
 listGLM_obj_w <- listGLM(fit_glm0,fit_glm1) # warning from confint

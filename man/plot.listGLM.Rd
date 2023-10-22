@@ -10,6 +10,12 @@
 \item{x}{An object of class 'listGLM' i.e. a list of fitted \code{glm} model object(s) of family \code{binomial}.}
 
 \item{exp}{\code{logical}. If \code{TRUE} then the coefficients are exponentiated, so the x marker is 0; if \code{FALSE}, x marker is 1.}
+
+\item{ci}{The confidence interval level required. Default is 0.95.}
+
+\item{ci_normal}{\code{logical}. If \code{TRUE} then calculate the confidence interval based on asymptotic normality; if \code{FALSE} calculate the profile likelihood confidence interval using \code{confint} (default).}
+
+\item{sigfig}{The number of significant figures to round the results to. Default is 6.}
 }
 \description{
 S3 method for class 'listGLM' used to plot coefficient estimates and confidence intervals in a Forest Plot.

@@ -30,10 +30,10 @@ listGLM <- function(...){
 #'
 #' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
-#' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
-#' @param ci The confidence interval level required.
+#' @param raw `logical`. If `TRUE` then return the values in a `list` of `data.frame` objects, if `FALSE` return the values in a `gt` group object (default).
+#' @param ci The confidence interval level required. Default is 0.95.
 #' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
-#' @param sigfig The number of significant figures to round the results to.
+#' @param sigfig The number of significant figures to round the results to. Default is 6.
 #' @param expand `logical`. If `TRUE` then additionally return the standard errors, z values and p-values from the glm summary object.
 #' @keywords coefficients, confidence interval, forest plot
 #' @examples
@@ -93,6 +93,9 @@ coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand
 #'
 #' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then the coefficients are exponentiated, so the x marker is 0; if `FALSE`, x marker is 1.
+#' @param ci The confidence interval level required. Default is 0.95.
+#' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
+#' @param sigfig The number of significant figures to round the results to. Default is 6.
 #' @keywords forest plot, confidence interval
 #' @examples
 #' modelList <- listGLM(fittedModel1, fittedModel2)
@@ -145,9 +148,9 @@ plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 #'
 #' @param fittedModels An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
-#' @param ci The confidence interval level required.
+#' @param ci The confidence interval level required. Default is 0.95.
 #' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
-#' @param sigfig The number of significant figures to round the results to.
+#' @param sigfig The number of significant figures to round the results to. Default is 6.
 #' @keywords coefficients, confidence interval, glm
 #' @examples
 #' coef <- getCoef(listGLM(fittedModel1, fittedModel2, fittedModel3))
@@ -165,9 +168,15 @@ getCoef.default <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6)
 #' @export
 getCoef.listGLM <- function(fittedModels, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 
-  # TODO check fittedModels is of class listGLM
-  #TODO check ci range is valid
-  # check everything is valid
+  # Function should only be called internally, adding checks just in case
+  # Check inputs
+  if(class(fittedModels) != "listGLM") {stop(paste("getCoef: The input is not a listGLM object"))}
+  if(!is.logical(exp)){stop(paste("getCoef: Argument 'exp' must be logical"))}
+  if(!is.logical(ci_normal)){stop(paste("getCoef: Argument 'ci_normal' must be logical"))}
+  if(!is.numeric(ci)){stop(paste("getCoef: Argument 'ci' must be a numeric value between 0 and 1"))}
+  if(ci>=1 || ci < 0){stop(paste("getCoef: Argument 'ci' must be a numeric value between 0 and 1"))}
+  if(!is.numeric(sigfig)){stop(paste("getCoef: Argument 'sigfig' must be an integer greater than 0"))}
+  if(sigfig%%1!=0 || sigfig < 0){stop(paste("getCoef: Argument 'sigfig' must be an integer greater than 0"))}
 
 
   # Get required data from each model

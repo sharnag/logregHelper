@@ -2,10 +2,11 @@
 #'
 #' S3 method for class 'listGLM'. Performs a likelihood ratio test between pairs of models in a given listGLM object.
 #'
-#' @param model_list An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
+#' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param alpha The significance level of the LR test. Default is 0.05.
 #' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
 #' @param override `logical`. If `TRUE` then perform the LR test for all pairs in the input list; if `FALSE` then only perform the LR test for nested model pairs.
+#' @param sigfig The number of significant figures to round the results to. Default is 4.
 #' @keywords likelihood ratio test
 #' @examples
 #' modelList <- listGLM(fittedModel1, fittedModel2, fittedModel2)
@@ -17,12 +18,20 @@
 #' @importFrom lmtest lrtest
 #'
 #' @export
-lrtest.listGLM <- function(model_list, alpha=0.05, raw=F, override=F){
+lrtest.listGLM <- function(x, alpha=0.05, raw=F, override=F, sigfig=4){
 
-  # todo input checks
+  # Check inputs
+  if(class(x) != "listGLM") {stop(paste("The input is not a listGLM object"))}
+  if(!is.logical(raw)){stop(paste("Argument 'raw' must be logical"))}
+  if(!is.logical(override)){stop(paste("Argument 'override' must be logical"))}
+  if(!is.numeric(alpha)){stop(paste("Argument 'alpha' must be a numeric value between 0 and 1"))}
+  if(alpha > 1 || alpha < 0){stop(paste("Argument 'alpha' must be a numeric value between 0 and 1"))}
+  if(!is.numeric(sigfig)){stop(paste("Argument 'sigfig' must be an integer greater than 0"))}
+  if(sigfig%%1!=0 || sigfig < 0){stop(paste("Argument 'sigfig' must be an integer greater than 0"))}
 
-  n <- length(model_list)
-  # todo if this is 1, stop here.
+  # Check if only one model exists in list
+  n <- length(x)
+  if(n<2) {stop(paste("The listGLM object must contain more than one model"))  }
 
 
   # Create a comparison matrix indicating which models are nested
@@ -36,12 +45,14 @@ lrtest.listGLM <- function(model_list, alpha=0.05, raw=F, override=F){
         comparison_matrix[i, j] <- 1
       } else{
         # Only nested models will be compared (1 if nested, otherwise 0)
-        comparison_matrix[i, j] <- insight::is_nested_models(model_list[[i]],model_list[[j]])[1]
+        comparison_matrix[i, j] <- insight::is_nested_models(x[[i]],x[[j]])[1]
+        # Message from insight: Some of the nested models seem to be identical
       }
     }
   }
 
-  # TODO: if no "TRUE", then stop the function here. suggest override.
+  # If there are no pairs to compare, stop here
+  if(sum(comparison_matrix) == 0){stop(paste("The listGLM object contains no nested models"))  }
 
   # Store formula, deviances and residual dfs in separate vectors
   m_formula <- rep(NA, n)
@@ -49,26 +60,27 @@ lrtest.listGLM <- function(model_list, alpha=0.05, raw=F, override=F){
   m_df <- rep(NA, n)
 
   for (i in 1:n){
-    m_formula[i] <- paste(format(model_list[[i]]$formula), collapse=" ")
-    m_dev[i] <- model_list[[i]]$deviance
-    m_df[i] <- model_list[[i]]$df.residual
+    m_formula[i] <- paste(format(x[[i]]$formula), collapse=" ")
+    m_dev[i] <- x[[i]]$deviance
+    m_df[i] <- x[[i]]$df.residual
   }
 
   # Call Rcpp function to calculate p-value of LR test
  list_LR <-rcpp_multipleLRTest(m_dev, m_df, comparison_matrix)
 
  # Create results dataframe
- rejectH0 <- ifelse(list_LR$pvals<alpha, 'Yes', 'No')
+ rejectH0 <- ifelse(list_LR$pvals<alpha, 'Reject', 'Do Not Reject')
  rejectH0 <- ifelse((list_LR$df==0), 'Check Models', rejectH0)
 
  results <- data.frame(rejectH0,
-                       pvals=signif(list_LR$pvals,4),
-                       test_stat=signif(list_LR$test_stat,5),
+                       pvals=signif(list_LR$pvals,sigfig),
+                       test_stat=signif(list_LR$test_stat,sigfig),
                        df=list_LR$df,
                        m1=m_formula[list_LR$m1_index],
                        m2=m_formula[list_LR$m2_index])
 
- # TODO: add col headers, rejectH0 (alpha = x)
+ test_level <- paste0("H0 (alpha=", alpha, ")")
+ colnames(results) <- c(test_level, "p-value", "Test Stat", "DF", "M1", "M2")
 
  if(!raw){
    # Convert data.frame to ("gt_tbl" "list")

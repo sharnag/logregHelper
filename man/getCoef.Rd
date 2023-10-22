@@ -11,11 +11,11 @@ getCoef(fittedModels, exp = F, ci = 0.95, ci_normal = F, sigfig = 6)
 
 \item{exp}{\code{logical}. If \code{TRUE} then exponentiate the coefficients and confidence intervals; if \code{FALSE} do not exponentiate (default).}
 
-\item{ci}{The confidence interval level required.}
+\item{ci}{The confidence interval level required. Default is 0.95.}
 
 \item{ci_normal}{\code{logical}. If \code{TRUE} then calculate the confidence interval based on asymptotic normality; if \code{FALSE} calculate the profile likelihood confidence interval using \code{confint} (default).}
 
-\item{sigfig}{The number of significant figures to round the results to.}
+\item{sigfig}{The number of significant figures to round the results to. Default is 6.}
 }
 \description{
 S3 method for class 'listGLM. Get coefficients, std errors, z and p values for each model in 'listGLM' object.

@@ -4,16 +4,18 @@
 \alias{lrtest.listGLM}
 \title{Likelihood Ratio Test for Multiple Models}
 \usage{
-\method{lrtest}{listGLM}(model_list, alpha = 0.05, raw = F, override = F)
+\method{lrtest}{listGLM}(x, alpha = 0.05, raw = F, override = F, sigfig = 4)
 }
 \arguments{
-\item{model_list}{An object of class 'listGLM' i.e. a list of fitted \code{glm} model object(s) of family \code{binomial}.}
+\item{x}{An object of class 'listGLM' i.e. a list of fitted \code{glm} model object(s) of family \code{binomial}.}
 
 \item{alpha}{The significance level of the LR test. Default is 0.05.}
 
 \item{raw}{\code{logical}. If \code{TRUE} then return the values in a \code{data.frame} object, if \code{FALSE} return the values in a \code{gt} table object (default).}
 
 \item{override}{\code{logical}. If \code{TRUE} then perform the LR test for all pairs in the input list; if \code{FALSE} then only perform the LR test for nested model pairs.}
+
+\item{sigfig}{The number of significant figures to round the results to. Default is 4.}
 }
 \description{
 S3 method for class 'listGLM'. Performs a likelihood ratio test between pairs of models in a given listGLM object.

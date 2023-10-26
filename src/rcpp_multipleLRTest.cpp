@@ -32,7 +32,7 @@ List rcpp_multipleLRTest(NumericVector dev_vec, IntegerVector df_vec, NumericMat
     for (int j = (i+1); j < n; ++j) {
       if(comparison_matrix(i,j)) { //if models are nested
 
-        // calculate and store p-value of LR test
+        // calculate and store the difference in deviance and df
         test_dev = abs(dev_vec[i] - dev_vec[j]);
         test_df = abs(df_vec[i] - df_vec[j]);
 

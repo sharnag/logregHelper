@@ -32,8 +32,8 @@ plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
   if(!("binomial" %in% fittedModel$family)) { stop(paste("The glm object must have family = binomial."))  }
 
 
+  # TODO, need to decide how to handle transformations "poly(age, 2)" and models with interaction
 
-  # TODO, need to decide how to handle polynomial terms "poly(age, 2)" and models with interaction
   # get the numerical terms used in the model
   numerical_cols <- colnames(fittedModel$data[,sapply(fittedModel$data,is.numeric)])
   model_terms <- attr(fittedModel$terms, "term.labels")
@@ -41,6 +41,14 @@ plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
 
   # if no numerical terms in the model then return an error message
   if (length(numerical_terms)==0) {stop(paste("The model has no numerical predictors."))}
+
+  # check if any numeric terms are discrete
+  for (i in numerical_terms) {
+    if(sapply(fittedModel$data[i], function(x) isTRUE(all.equal(x, floor(x))))) {
+      message(paste0("The predictor '", i, "' is discrete."))}
+  }
+
+
 
   # Calculate the logit of the predicted probabilities
   data_copy <- fittedModel$data

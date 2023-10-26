@@ -44,6 +44,7 @@ List rcpp_multipleLRTest(NumericVector dev_vec, IntegerVector df_vec, NumericMat
           }
 
         } else{
+          // perform the LR test and store the p-value
           boost::math::chi_squared mydist(test_df);
           p[counter] = 1-boost::math::cdf(mydist,test_dev);
         }

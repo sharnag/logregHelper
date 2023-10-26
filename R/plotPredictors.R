@@ -48,8 +48,6 @@ plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
       message(paste0("The predictor '", i, "' is discrete."))}
   }
 
-
-
   # Calculate the logit of the predicted probabilities
   data_copy <- fittedModel$data
   data_copy$logitResp <- log(fittedModel$fitted.values / (1-fittedModel$fitted.values))

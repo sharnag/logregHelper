@@ -26,7 +26,7 @@ listGLM <- function(...){
 
 #' Logistic Regression Coefficients and Confidence Intervals
 #'
-#' S3 method for class 'listGLM' used to present the model coefficient estimates and confidence intervals of one or more `glm` objects in a gt table or data.frame.
+#' S3 method for class 'listGLM' used to present the model coefficient estimates, standard errors and confidence intervals of one or more `glm` objects in a gt table or data.frame.
 #'
 #' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
@@ -34,7 +34,7 @@ listGLM <- function(...){
 #' @param ci The confidence interval level required. Default is 0.95.
 #' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
 #' @param sigfig The number of significant figures to round the results to. Default is 6.
-#' @param expand `logical`. If `TRUE` then additionally return the standard errors, z values and p-values from the glm summary object.
+#' @param expand `logical`. If `TRUE` then additionally return the z values and p-values from the glm summary object.
 #' @keywords coefficients, confidence interval, forest plot
 #' @examples
 #' modelList <- listGLM(fittedModel1, fittedModel2)
@@ -62,7 +62,7 @@ coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand
 
   # Return coefficients and CIs only
   if(!expand) {
-    coef_list$data <- coef_list$data[,1:5]
+    coef_list$data <- coef_list$data[,1:6]
   } else {
     coef_list$data <- coef_list$data[,1:8]
   }

@@ -14,8 +14,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message=FALSE}
 library(logregHelper)
+library(gt)
+library(lmtest)
 ```
 
 This vignette provides an overview of the logregHelper package and it's key functions.
@@ -32,23 +34,27 @@ There are currently two main functions in the package:
 
 **Model Diagnostics**
 
-- `plotPredictors` plots the logit of the response variable against the numerical predictors
-
+- `plotPredictors` plots the logit of the predicted probability against each numerical predictor
+ 
 **Model Selection**
 
-- `viewCoef` view the estimated coefficients and confidence intervals
+A new class `listGLM` is introduced which is essentially a list of fitted `glm` models.
 
-In this vignette we will provide examples of how to use them.
+It implements the following methods:
 
-The required inputs for the functions are fitted `glm` models of family "binomial". Currently `glm` models of other family types are not supported. 
+- `coef` returns the estimated coefficients and confidence intervals
+- `plot` plot the estimated coefficients and confidence intervals in a Forest Plot
+- `compare` returns the AIC, BIC and Pseudo-R-squared values for each model
+- `lrtest` performs a Likelihood Ratio test between each pair of nested models 
+
+**Dataset**
 
 In this vignette we will use models from the **mtcars** Motor Trend Car Road Tests dataset taken from the 1974 Motor Trend US magazine. The logistic regression task is to predict *am*; whether the transmission is automatic or manual. Source: `datasets` package.
 
 
 # Model Diagnostics
-## plotPredictors
-Logistic regression assumes linearity between the logit of the response variable and the continuous predictors. The `plotPredictors` function assists in this inspection by plotting the numerical predictor against the logit of the response. Note: discrete predictors are also included. `plotPredictors` is an S3 method on `glm` type objects. It calls another S3 method `addCols` which returns a `data.frame` with the required columns.
-
+## plotPredictors: S3 method for `glm`
+Logistic regression assumes linearity between the logit of the predicted probabilities and each continuous predictors. The `plotPredictors` function assists in this inspection by plotting the numerical predictor against the logit of the response. Both continuous and discrete predictors are also included in the plot.
 
 To begin we first fit or load a `glm` object of family "binomial":
 ```{r}
@@ -56,54 +62,106 @@ fit1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
 ```
 
 
-By default, `plotPredictors` returns a list of `ggplot` objects which we can view separately:
+By default, `plotPredictors` returns a list of `ggplot` objects which we can view separately. It also returns a message if any of the numeric predictors are discrete.
 ```{r, warning=FALSE, fig.width=5, fig.height=4, fig.align='center'}
 myPlots <- plotPredictors(fit1)
-myPlots[[2]]
+myPlots[[3]]
 ```
 
 The smooth regression line can take a long time to run for models with large datasets (1000+ points). In this case we can disable the smoothing line with the `smooth` argument:
 ```{r, fig.width=5, fig.height=4, fig.align='center'}
-myPlots <- plotPredictors(fit1, smooth=F)
-myPlots[[2]]
+myPlots <- suppressMessages(plotPredictors(fit1, smooth=F))
+myPlots[[3]]
 ```
 
-Alternatively, we can return an interactive plot using:
+Alternatively, we can return an interactive plot using the following:
 ```{r, fig.width=7, fig.height=4, fig.align='center'}
 plotPredictors(fit1, interactive = T)
 ```
 
-Currently there is no option to add a smoothing line to the interactive plot.
+Currently there is no option to add a loess smoothing line to the interactive plot, so the "smooth" argument is ignored.
+
 
 # Model Selection
-## viewCoef
-The `viewCoef` function returns the estimated coefficients and 95% confidence intervals from one or more fitted `glm` objects of family "binomial". It maybe useful to see how the estimated coefficients change based on different predictors in a model.
+## listGLM
+The `listGLM` function takes one or more fitted `glm` objects as input, and returns them in a list belonging to the new class `listGLM`. The `glm` objects must belong to the "binomial" family.
 
-The default usage returns a `gt` table, however, you can also return the data as a `data.frame` by setting the argument `raw` to T.
-```{r, warning=FALSE, message=FALSE}
-viewCoef(fit1)
-```
-```{r, warning=FALSE, message=FALSE}
-viewCoef(fit1, raw=T)
-```
-
-Other arguments include whether to exponentiate the coefficients (`exp`), change the number of significant figures (`sigfig`), and include the test statistic and p-value (`expand`). We can also change the confidence interval level (`ci`) and return standard confidence intervals based on asymptotic normality instead of the profile likelihood confidence intervals.
-
-```{r, warning=FALSE, message=FALSE}
-viewCoef(fit1, exp=T, sigfig = 3, expand=T, ci=0.9, ci_normal=T)
-```
-
-
-Additionally, we can compare two or more models by passing the `glm` objects in a list. 
 ```{r, warning=FALSE, message=FALSE}
 fit2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
 fit3 <- glm(am ~ cyl + wt, data=mtcars, family = binomial(link = "logit"))
-viewCoef(list(fit1, fit2, fit3), sigfig=4)
+
+listGLM1 <- listGLM(fit1, fit2, fit3)
 ```
 
-Finally, we can return a Forest Plot of the estimates and confidence intervals using:
+## coef: S3 method for `listGLM`
+The `coef` method  returns the estimated coefficients and 95% confidence intervals in a `listGLM`. The object returned includes both the model formulae, and a summary of the coefficients for each model. The default usage returns a group of `gt` tables, however, you can also return the data as a list of `data.frame` objects by setting the argument `raw` to T.
+```{r, warning=FALSE, message=FALSE}
+gt <- coef(listGLM1)
+# For markdown rendering purposes, we use the grp_pull function. In the console, you can print by  calling the object directly.
+grp_pull(gt,1)
+grp_pull(gt,2)
+```
+
+```{r, warning=FALSE, message=FALSE}
+coef(listGLM1, raw=T)
+```
+
+Other arguments include whether to exponentiate the coefficients (`exp`), change the number of significant figures (`sigfig`), and include the test statistic and p-values (`expand`). We can also change the confidence interval level (`ci`) and return standard confidence intervals based on asymptotic normality instead of the profile likelihood confidence intervals.
+
+```{r, warning=FALSE, message=FALSE}
+coef(listGLM1, raw=T, exp=T, sigfig = 3, expand=T, ci=0.9, ci_normal=T)
+```
+
+## plot:  S3 method for `listGLM`
+We can return a Forest Plot of the estimates and confidence intervals using the `plot` method. The method also accepts arguments to exponentiate coefficients and change the confidence level.
+
 ```{r, warning=FALSE, fig.width=7, fig.height=4, fig.align='center', message=FALSE}
-viewCoef(list(fit1,fit2, fit3), plot=T) 
+plot(listGLM1, exp=F, ci=0.95, ci_normal=F)
 ```
 
+
+
+## compare: S3 method for `listGLM`
+The `compare` method returns the AIC, BIC and McFadden's Pseudo-R-squared values for each model in the `listGLM` object. By default, a `gt` table is returned.
+```{r, warning=FALSE, message=FALSE}
+compare(listGLM1)
+```
+
+Arguments include `raw` (return a `data.frame` object instead), `sigfig` (the number of significant figures to round to) and `expand` (return additional pseudo-R-squared measures).
+
+```{r, warning=FALSE, message=FALSE}
+compare(listGLM1, raw=T, sigfig=3, expand=T)
+```
+
+
+## lrtest:  S3 method for `listGLM`
+Finally, the `lrtest` method performs a Likelihood Ratio test between all pairs of nested models in the `listGLM` object. 
+
+- The method uses the `is_nested_models` function from the `insight` package to determine whether the models are nested.
+- The S3 methods calls an RCPP function (`rcpp_multipleLRTest`), which performs the Likelihood Ratio test.  
+
+The default significance level used for the test is 0.05, which can be changed using the `alpha` argument.
+
+```{r, warning=FALSE, message=FALSE}
+lrtest(listGLM1, alpha=0.05)
+```
+
+
+Other arguments include `raw` (return a `data.frame` object instead), `sigfig` (the number of significant figures to round to) and `override` (perform the LR test on all pairs, regardless of nesting).
+
+```{r, warning=FALSE, message=FALSE}
+lrtest(listGLM1, alpha=0.01, raw=T, override=T, sigfig=3)
+```
+
+
+The `override` flag is to be used at the user's discretion. For example, the `is_nested_models` function does not consider models using polynomial terms to be nested. For example, the following models would not be compared using default arguments.
+
+$$ am \sim cyl + hp + wt$$
+$$ am \sim cyl + hp + poly(wt,2)$$
+The `override` argument allows us to perform the Likelihood Ratio test regardless:
+```{r, warning=FALSE, message=FALSE}
+fit4 <- glm(am ~ cyl + hp + poly(wt,2), data=mtcars, family = binomial(link = "logit"))
+listGLM2 <- listGLM(fit1, fit4)
+lrtest(listGLM2, override=T)
+```
 

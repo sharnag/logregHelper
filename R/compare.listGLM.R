@@ -5,8 +5,8 @@
 #' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).
 #' @param sigfig The number of significant figures to round the results to. Default is 4.
-#' @param expand `logical`. If  `FALSE` (default), return the AIC, BIC and McFadden's Pseudo R2-values. If TRUE` then return additional Pseudo-R2 values.
-#' @keywords aic, bic, compare, R-squared
+#' @param expand `logical`. If`FALSE` (default), return the AIC, BIC and McFadden's Pseudo R2-values. If `TRUE` then return additional Pseudo-R2 values.
+#' @keywords aic, bic, compare, pseudo R-squared
 #' @examples
 #' compare(listGLM(fittedModel1, fittedModel2, fittedModel3),expand=T)
 #'

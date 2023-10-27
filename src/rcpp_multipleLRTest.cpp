@@ -9,10 +9,10 @@ using namespace Rcpp;
 //' @name Internal rcpp function - Likelihood Ratio Test
 //'
 //' @details Internal rcpp function that performs a likelihood ratio test between pairs of models. Returns the p-values and model indicies.
+//' @param dev_vec A NumericVector containing the residual deviance for each model.
+//' @param df_vec A NumericVector containing the residual degrees of freedom for each model.
+//' @param comparison_matrix A NumericMatrix indicating which pairs of models are nested models.
 //'
-//' @export
-//' @examples
-//' list_LR <-rcpp_multipleLRTest(m_dev, m_df, comparison_matrix)
 //' @export
 // [[Rcpp::export]]
 List rcpp_multipleLRTest(NumericVector dev_vec, IntegerVector df_vec, NumericMatrix comparison_matrix) {

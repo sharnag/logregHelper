@@ -8,7 +8,10 @@
 #' @param expand `logical`. If`FALSE` (default), return the AIC, BIC and McFadden's Pseudo R2-values. If `TRUE` then return additional Pseudo-R2 values.
 #' @keywords aic, bic, compare, pseudo R-squared
 #' @examples
-#' compare(listGLM(fittedModel1, fittedModel2, fittedModel3),expand=T)
+#' fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+#' fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+#' modelList <- listGLM(fit_glm1, fit_glm2)
+#' compare(modelList, raw=TRUE, expand=TRUE)
 #'
 #' @importFrom stats AIC BIC
 #' @importFrom DescTools PseudoR2
@@ -30,7 +33,10 @@ compare.default <- function(x, raw=F, sigfig=4, expand=F) print("Function is onl
 #' @param expand `logical`. If`FALSE` (default), return the AIC, BIC and McFadden's Pseudo R2-values. If `TRUE` then return additional Pseudo-R2 values.
 #' @keywords aic, bic, compare, pseudo R-squared
 #' @examples
-#' compare(listGLM(fittedModel1, fittedModel2, fittedModel3),expand=T)
+#' fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+#' fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+#' modelList <- listGLM(fit_glm1, fit_glm2)
+#' compare(modelList, raw=TRUE, expand=TRUE)
 #'
 #' @importFrom stats AIC BIC
 #' @importFrom DescTools PseudoR2

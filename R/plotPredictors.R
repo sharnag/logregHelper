@@ -4,10 +4,12 @@
 #' Current implementations include an S3 Method for glm objects, used to return plots of the logit of the response vs numerical predictors in the fitted model.
 #'
 #' @param fittedModel A fitted `glm` model object of family `binomial`.
+#' @param smooth `logical`. If `TRUE` then include a loess smoothing line (default); if `FALSE` do not include the loess line.
 #' @param interactive `logical`. If `TRUE` then return an interactive plot; if `FALSE`, return ggplot objects (default).
 #' @keywords diagnostics, assumptions, linearity, logit, predictor plots
 #' @examples
-#' my_plots <- plotPredictors(fittedModel)
+#' fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+#' my_plots <- plotPredictors(fit_glm1)
 #' my_plots[[1]]
 #'
 #' @importFrom ggplot2 ggplot aes geom_point labs theme_minimal geom_smooth
@@ -26,10 +28,12 @@ plotPredictors.default <- function(fittedModel, smooth=T, interactive=F) print("
 #' S3 Method for glm object used to return plots of the logit of the response vs numerical predictors. Used during model diagnostics.
 #'
 #' @param fittedModel A fitted `glm` model object of family `binomial`.
+#' @param smooth `logical`. If `TRUE` then include a loess smoothing line (default); if `FALSE` do not include the loess line.
 #' @param interactive `logical`. If `TRUE` then return an interactive plot; if `FALSE`, return ggplot objects (default).
 #' @keywords diagnostics, assumptions, linearity, logit, predictor plots
 #' @examples
-#' my_plots <- plotPredictors(fittedModel)
+#' fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+#' my_plots <- plotPredictors(fit_glm1)
 #' my_plots[[1]]
 #'
 #' @importFrom ggplot2 ggplot aes geom_point labs theme_minimal geom_smooth

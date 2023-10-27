@@ -21,7 +21,9 @@
 S3 method for class 'listGLM'. Performs a likelihood ratio test between pairs of models in a given listGLM object.
 }
 \examples{
-modelList <- listGLM(fittedModel1, fittedModel2, fittedModel2)
+fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+modelList <- listGLM(fit_glm1, fit_glm2)
 lrtest(modelList)
 
 }

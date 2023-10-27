@@ -9,12 +9,15 @@
 #' @param sigfig The number of significant figures to round the results to. Default is 4.
 #' @keywords likelihood ratio test
 #' @examples
-#' modelList <- listGLM(fittedModel1, fittedModel2, fittedModel2)
+#' fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+#' fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+#' modelList <- listGLM(fit_glm1, fit_glm2)
 #' lrtest(modelList)
 #'
 #' @importFrom insight is_nested_models
 #' @importFrom magrittr %>%
 #' @importFrom gt gt opt_stylize
+#' @importFrom lmtest lrtest
 #'
 #' @export
 lrtest.listGLM <- function(x, alpha=0.05, raw=F, override=F, sigfig=4){

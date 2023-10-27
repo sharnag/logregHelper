@@ -25,8 +25,10 @@
 S3 method for class 'listGLM' used to present the model coefficient estimates, standard errors and confidence intervals of one or more \code{glm} objects in a gt table or data.frame.
 }
 \examples{
-modelList <- listGLM(fittedModel1, fittedModel2)
-coef(modelList, exp=T)
+fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+modelList <- listGLM(fit_glm1, fit_glm2)
+coef(modelList, exp=TRUE)
 
 }
 \keyword{coefficients,}

@@ -5,7 +5,9 @@
 #' @param ... one or more fitted `glm` model objects of family `binomial`.
 #' @keywords list glm
 #' @examples
-#' x <- listGLM(fittedModel1, fittedModel2, fittedModel3)
+#' fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+#' fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+#' x <- listGLM(fit_glm1, fit_glm2)
 #'
 #'
 #' @export
@@ -37,8 +39,10 @@ listGLM <- function(...){
 #' @param expand `logical`. If `TRUE` then additionally return the z values and p-values from the glm summary object.
 #' @keywords coefficients, confidence interval, forest plot
 #' @examples
-#' modelList <- listGLM(fittedModel1, fittedModel2)
-#' coef(modelList, exp=T)
+#' fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+#' fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+#' modelList <- listGLM(fit_glm1, fit_glm2)
+#' coef(modelList, exp=TRUE)
 #'
 #' @importFrom gt gt opt_stylize gt_group
 #'
@@ -98,7 +102,9 @@ coef.listGLM <- function(x, exp=F, raw=F, ci=0.95, ci_normal=F, sigfig=6, expand
 #' @param sigfig The number of significant figures to round the results to. Default is 6.
 #' @keywords forest plot, confidence interval
 #' @examples
-#' modelList <- listGLM(fittedModel1, fittedModel2)
+#' fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+#' fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+#' modelList <- listGLM(fit_glm1, fit_glm2)
 #' plot(modelList)
 #'
 #' @importFrom ggplot2 ggplot aes geom_point geom_errorbarh position_dodge geom_vline labs theme_minimal scale_x_continuous
@@ -145,6 +151,7 @@ plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 #' Get coefficients from GLM models
 #'
 #' S3 method for class 'listGLM. Get coefficients, std errors, z and p values for each model in 'listGLM' object.
+#' Used internally by coef and plot methods.
 #'
 #' @param fittedModels An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param exp `logical`. If `TRUE` then exponentiate the coefficients and confidence intervals; if `FALSE` do not exponentiate (default).
@@ -152,8 +159,6 @@ plot.listGLM <- function(x, exp=F, ci=0.95, ci_normal=F, sigfig=6){
 #' @param ci_normal `logical`. If `TRUE` then calculate the confidence interval based on asymptotic normality; if `FALSE` calculate the profile likelihood confidence interval using `confint` (default).
 #' @param sigfig The number of significant figures to round the results to. Default is 6.
 #' @keywords coefficients, confidence interval, glm
-#' @examples
-#' coef <- getCoef(listGLM(fittedModel1, fittedModel2, fittedModel3))
 #'
 #' @importFrom magrittr %>%
 #' @importFrom stats confint confint.default

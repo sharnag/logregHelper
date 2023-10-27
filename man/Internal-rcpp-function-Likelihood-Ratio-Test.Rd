@@ -7,12 +7,16 @@
 \usage{
 rcpp_multipleLRTest(dev_vec, df_vec, comparison_matrix)
 }
+\arguments{
+\item{dev_vec}{A NumericVector containing the residual deviance for each model.}
+
+\item{df_vec}{A NumericVector containing the residual degrees of freedom for each model.}
+
+\item{comparison_matrix}{A NumericMatrix indicating which pairs of models are nested models.}
+}
 \description{
 Internal rcpp function - Likelihood Ratio Test
 }
 \details{
 Internal rcpp function that performs a likelihood ratio test between pairs of models. Returns the p-values and model indicies.
-}
-\examples{
-list_LR <-rcpp_multipleLRTest(m_dev, m_df, comparison_matrix)
 }

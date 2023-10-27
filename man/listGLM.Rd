@@ -13,7 +13,9 @@ listGLM(...)
 Function used to create list of glm objects of class 'listGLM'
 }
 \examples{
-x <- listGLM(fittedModel1, fittedModel2, fittedModel3)
+fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+x <- listGLM(fit_glm1, fit_glm2)
 
 
 }

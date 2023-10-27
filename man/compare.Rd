@@ -19,7 +19,10 @@ compare(x, raw = F, sigfig = 4, expand = F)
 \code{compare} is generic function which calculates the AIC, BIC and Pseudo-R-squared values for each model in a list.
 }
 \examples{
-compare(listGLM(fittedModel1, fittedModel2, fittedModel3),expand=T)
+fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+modelList <- listGLM(fit_glm1, fit_glm2)
+compare(modelList, raw=TRUE, expand=TRUE)
 
 }
 \keyword{R-squared}

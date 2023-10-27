@@ -21,7 +21,9 @@
 S3 method for class 'listGLM' used to plot coefficient estimates and confidence intervals in a Forest Plot.
 }
 \examples{
-modelList <- listGLM(fittedModel1, fittedModel2)
+fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+fit_glm2 <- glm(am ~ cyl + hp, data=mtcars, family = binomial(link = "logit"))
+modelList <- listGLM(fit_glm1, fit_glm2)
 plot(modelList)
 
 }

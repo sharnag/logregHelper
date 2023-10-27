@@ -19,10 +19,7 @@ getCoef(fittedModels, exp = F, ci = 0.95, ci_normal = F, sigfig = 6)
 }
 \description{
 S3 method for class 'listGLM. Get coefficients, std errors, z and p values for each model in 'listGLM' object.
-}
-\examples{
-coef <- getCoef(listGLM(fittedModel1, fittedModel2, fittedModel3))
-
+Used internally by coef and plot methods.
 }
 \keyword{coefficients,}
 \keyword{confidence}

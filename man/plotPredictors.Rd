@@ -9,6 +9,8 @@ plotPredictors(fittedModel, smooth = T, interactive = F)
 \arguments{
 \item{fittedModel}{A fitted \code{glm} model object of family \code{binomial}.}
 
+\item{smooth}{\code{logical}. If \code{TRUE} then include a loess smoothing line (default); if \code{FALSE} do not include the loess line.}
+
 \item{interactive}{\code{logical}. If \code{TRUE} then return an interactive plot; if \code{FALSE}, return ggplot objects (default).}
 }
 \description{
@@ -16,7 +18,8 @@ plotPredictors(fittedModel, smooth = T, interactive = F)
 Current implementations include an S3 Method for glm objects, used to return plots of the logit of the response vs numerical predictors in the fitted model.
 }
 \examples{
-my_plots <- plotPredictors(fittedModel)
+fit_glm1 <- glm(am ~ cyl + hp + wt, data=mtcars, family = binomial(link = "logit"))
+my_plots <- plotPredictors(fit_glm1)
 my_plots[[1]]
 
 }

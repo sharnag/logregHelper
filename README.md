@@ -10,14 +10,21 @@ install.packages("devtools")
 devtools::install_github("sharnag/logregHelper")
 ```
 
-There are currently two main functions in the package:
+The main functions are:
 
 **Model Diagnostics**
 
-- `plotPredictors` plots the logit of the response variable against the numerical predictors
-
+- `plotPredictors` plots the logit of the predicted probability against each numerical predictor
+ 
 **Model Selection**
 
-- `viewCoef` view the estimated coefficients and confidence intervals
+- `listGLM` creates an object of a new class `listGLM` which is essentially a list of fitted `glm` models.
 
-The logregHelper vignette provides examples of how to use them.
+It implements the following methods:
+
+- `coef` returns the estimated coefficients and confidence intervals
+- `plot` plot the estimated coefficients and confidence intervals in a Forest Plot
+- `compare` returns the AIC, BIC and Pseudo-R-squared values for each model
+- `lrtest` performs a Likelihood Ratio test between each pair of nested models
+
+The logregHelper vignette provides examples of how to use these functions.

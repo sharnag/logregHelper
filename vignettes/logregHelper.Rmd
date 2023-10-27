@@ -30,7 +30,7 @@ install.packages("devtools")
 devtools::install_github("sharnag/logregHelper")
 ```
 
-There are currently two main functions in the package:
+The main functions are:
 
 **Model Diagnostics**
 
@@ -38,7 +38,7 @@ There are currently two main functions in the package:
  
 **Model Selection**
 
-A new class `listGLM` is introduced which is essentially a list of fitted `glm` models.
+- `listGLM` creates an object of a new class `listGLM` which is essentially a list of fitted `glm` models.
 
 It implements the following methods:
 

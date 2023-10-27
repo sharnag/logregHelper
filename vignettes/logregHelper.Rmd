@@ -83,6 +83,8 @@ Currently there is no option to add a loess smoothing line to the interactive pl
 
 
 # Model Selection
+The model selection phase typically involves reviewing and comparing a number of models. The functions in this section are designed to aid model selection by facilitating model comparison in terms of coefficients and overall model fit.
+
 ## listGLM
 The `listGLM` function takes one or more fitted `glm` objects as input, and returns them in a list belonging to the new class `listGLM`. The `glm` objects must belong to the "binomial" family.
 

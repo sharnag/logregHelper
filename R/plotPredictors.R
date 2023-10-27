@@ -20,6 +20,22 @@ plotPredictors <- function(fittedModel, smooth=T, interactive=F) UseMethod('plot
 #' @export
 plotPredictors.default <- function(fittedModel, smooth=T, interactive=F) print("Function is only available to glm objects.")
 
+#' Plot Logit of Response against Numerical Predictors
+#'
+#' S3 Method for glm object used to return plots of the logit of the response vs numerical predictors. Used during model diagnostics.
+#'
+#' @param fittedModel A fitted `glm` model object of family `binomial`.
+#' @param interactive `logical`. If `TRUE` then return an interactive plot; if `FALSE`, return ggplot objects (default).
+#' @keywords diagnostics, assumptions, linearity, logit, predictor plots
+#' @examples
+#' my_plots <- plotPredictors(fittedModel)
+#' my_plots[[1]]
+#'
+#' @importFrom ggplot2 ggplot aes geom_point labs theme_minimal geom_smooth
+#' @importFrom magrittr %>%
+#' @importFrom plotly plot_ly add_markers layout
+#' @importFrom rlang sym
+#'
 #' @export
 plotPredictors.glm <- function(fittedModel, smooth=T, interactive=F){
 

@@ -19,10 +19,10 @@
 
 \item{sigfig}{The number of significant figures to round the results to. Default is 6.}
 
-\item{expand}{\code{logical}. If \code{TRUE} then additionally return the standard errors, z values and p-values from the glm summary object.}
+\item{expand}{\code{logical}. If \code{TRUE} then additionally return the z values and p-values from the glm summary object.}
 }
 \description{
-S3 method for class 'listGLM' used to present the model coefficient estimates and confidence intervals of one or more \code{glm} objects in a gt table or data.frame.
+S3 method for class 'listGLM' used to present the model coefficient estimates, standard errors and confidence intervals of one or more \code{glm} objects in a gt table or data.frame.
 }
 \examples{
 modelList <- listGLM(fittedModel1, fittedModel2)

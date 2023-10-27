@@ -15,7 +15,6 @@
 #' @importFrom insight is_nested_models
 #' @importFrom magrittr %>%
 #' @importFrom gt gt opt_stylize
-#' @importFrom lmtest lrtest
 #'
 #' @export
 lrtest.listGLM <- function(x, alpha=0.05, raw=F, override=F, sigfig=4){
@@ -92,7 +91,5 @@ lrtest.listGLM <- function(x, alpha=0.05, raw=F, override=F, sigfig=4){
 
  return(results)
 }
-
-
 
 

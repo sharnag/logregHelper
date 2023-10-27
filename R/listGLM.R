@@ -1,6 +1,6 @@
 #' List GLM models
 #'
-#' Function used create list of glm objects of class 'listGLM'
+#' Function used to create list of glm objects of class 'listGLM'
 #'
 #' @param ... one or more fitted `glm` model objects of family `binomial`.
 #' @keywords list glm

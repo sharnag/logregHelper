@@ -1,6 +1,6 @@
 #' Compare GLM models using various criteria
 #'
-#' S3 method for class 'listGLM'. Get AIC, BIC and Pseudo-R-squared values for each model in 'listGLM' object.
+#' `compare` is generic function which calculates the AIC, BIC and Pseudo-R-squared values for each model in a list.
 #'
 #' @param x An object of class 'listGLM' i.e. a list of fitted `glm` model object(s) of family `binomial`.
 #' @param raw `logical`. If `TRUE` then return the values in a `data.frame` object, if `FALSE` return the values in a `gt` table object (default).

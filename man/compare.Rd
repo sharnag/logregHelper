@@ -16,7 +16,7 @@ compare(x, raw = F, sigfig = 4, expand = F)
 \item{expand}{\code{logical}. If\code{FALSE} (default), return the AIC, BIC and McFadden's Pseudo R2-values. If \code{TRUE} then return additional Pseudo-R2 values.}
 }
 \description{
-S3 method for class 'listGLM'. Get AIC, BIC and Pseudo-R-squared values for each model in 'listGLM' object.
+\code{compare} is generic function which calculates the AIC, BIC and Pseudo-R-squared values for each model in a list.
 }
 \examples{
 compare(listGLM(fittedModel1, fittedModel2, fittedModel3),expand=T)

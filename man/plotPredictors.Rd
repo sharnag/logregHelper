@@ -12,7 +12,8 @@ plotPredictors(fittedModel, smooth = T, interactive = F)
 \item{interactive}{\code{logical}. If \code{TRUE} then return an interactive plot; if \code{FALSE}, return ggplot objects (default).}
 }
 \description{
-S3 Method for glm object used to return plots of the logit of the response vs numerical predictors. Used during model diagnostics.
+\code{plotPredictors} is a generic function used to plot a model's predictors against the the response.
+Current implementations include an S3 Method for glm objects, used to return plots of the logit of the response vs numerical predictors in the fitted model.
 }
 \examples{
 my_plots <- plotPredictors(fittedModel)

@@ -1,6 +1,7 @@
 #' Plot Logit of Response against Numerical Predictors
 #'
-#' S3 Method for glm object used to return plots of the logit of the response vs numerical predictors. Used during model diagnostics.
+#' `plotPredictors` is a generic function used to plot a model's predictors against the the response.
+#' Current implementations include an S3 Method for glm objects, used to return plots of the logit of the response vs numerical predictors in the fitted model.
 #'
 #' @param fittedModel A fitted `glm` model object of family `binomial`.
 #' @param interactive `logical`. If `TRUE` then return an interactive plot; if `FALSE`, return ggplot objects (default).

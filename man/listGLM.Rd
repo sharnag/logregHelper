@@ -10,7 +10,7 @@ listGLM(...)
 \item{...}{one or more fitted \code{glm} model objects of family \code{binomial}.}
 }
 \description{
-Function used create list of glm objects of class 'listGLM'
+Function used to create list of glm objects of class 'listGLM'
 }
 \examples{
 x <- listGLM(fittedModel1, fittedModel2, fittedModel3)

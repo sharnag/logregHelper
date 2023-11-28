@@ -20,7 +20,7 @@ library(gt)
 library(lmtest)
 ```
 
-This vignette provides an overview of the logregHelper package and it's key functions.
+This vignette provides an overview of the logregHelper package and its key functions.
 
 The purpose of this package is to simplify and streamline the model selection process by providing insightful summaries, tables and visualisations that allow users to review and compare logistic regression models. This package focuses on two areas: Model Diagnostics and Model Selection.
 
@@ -49,12 +49,12 @@ It implements the following methods:
 
 **Dataset**
 
-In this vignette we will use models from the **mtcars** Motor Trend Car Road Tests dataset taken from the 1974 Motor Trend US magazine. The logistic regression task is to predict *am*; whether the transmission is automatic or manual. Source: `datasets` package.
+In this vignette, we will use models from the **mtcars** Motor Trend Car Road Tests dataset taken from the 1974 Motor Trend US magazine. The logistic regression task is to predict *am*; whether the transmission is automatic or manual. Source: `datasets` package.
 
 
 # Model Diagnostics
 ## plotPredictors: S3 method for `glm`
-Logistic regression assumes linearity between the logit of the predicted probabilities and each continuous predictors. The `plotPredictors` function assists in this inspection by plotting the numerical predictor against the logit of the response. Both continuous and discrete predictors are also included in the plot.
+Logistic regression assumes linearity between the logit of the predicted probabilities and each continuous predictor. The `plotPredictors` function assists in this inspection by plotting the numerical predictor against the logit of the response. Both continuous and discrete predictors are also included in the plot.
 
 To begin we first fit or load a `glm` object of family "binomial":
 ```{r}
@@ -79,7 +79,7 @@ Alternatively, we can return an interactive plot using the following:
 plotPredictors(fit1, interactive = T)
 ```
 
-Currently there is no option to add a loess smoothing line to the interactive plot, so the "smooth" argument is ignored.
+Currently, there is no option to add a loess smoothing line to the interactive plot, so the "smooth" argument is ignored.
 
 
 # Model Selection
@@ -96,7 +96,7 @@ listGLM1 <- listGLM(fit1, fit2, fit3)
 ```
 
 ## coef: S3 method for `listGLM`
-The `coef` method  returns the estimated coefficients and 95% confidence intervals in a `listGLM`. The object returned includes both the model formulae, and a summary of the coefficients for each model. The default usage returns a group of `gt` tables, however, you can also return the data as a list of `data.frame` objects by setting the argument `raw` to T.
+The `coef` method returns the estimated coefficients and 95% confidence intervals in a `listGLM`. The object returned includes both the model formulae, and a summary of the coefficients for each model. The default usage returns a group of `gt` tables, however, you can also return the data as a list of `data.frame` objects by setting the argument `raw` to T.
 ```{r, warning=FALSE, message=FALSE}
 gt <- coef(listGLM1)
 # For markdown rendering purposes, we use the grp_pull function. In the console, you can print by  calling the object directly.
@@ -140,7 +140,7 @@ compare(listGLM1, raw=T, sigfig=3, expand=T)
 Finally, the `lrtest` method performs a Likelihood Ratio test between all pairs of nested models in the `listGLM` object. 
 
 - The method uses the `is_nested_models` function from the `insight` package to determine whether the models are nested.
-- The S3 methods calls an RCPP function (`rcpp_multipleLRTest`), which performs the Likelihood Ratio test.  
+- The S3 method calls an RCPP function (`rcpp_multipleLRTest`), which performs the Likelihood Ratio test.  
 
 The default significance level used for the test is 0.05, which can be changed using the `alpha` argument.
 
